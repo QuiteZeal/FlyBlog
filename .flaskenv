@@ -1,0 +1,2 @@
+FLASK_APP=NewLog
+FLASK_ENV=development
