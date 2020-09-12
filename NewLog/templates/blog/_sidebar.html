@@ -1,0 +1,33 @@
+{% if categories %}
+    <div class="card border-primary mb-3" style="max-width: 20rem;">
+        <div class="card-header">Categories</div>
+        <ul class="list-group">
+            {% for category in categories %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {#    指向blog.show_category視圖    #}
+                <a href="{{ url_for('blog.show_category', category_id=category.id) }}">
+                    {{ category.name }}
+                </a>
+                <span class="badge badge-primary badge-pill">{{ category.posts|length }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+{% if links %}
+    <div class="card border-secondary mb-3" style="max-width: 20rem;">
+        <div class="card-header">Links</div>
+        <ul class="list-group">
+            {% for link in links %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{{ link.url }}" target="_blank">{{ link.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+
+
+

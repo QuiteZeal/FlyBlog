@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block nav %}{% endblock %}
+
+{% block title %}500 Internal Server Error{% endblock %}
+
+{% block content %}
+    <div class="mt-5 text-center">
+        <h1 class="display-1">Sorry. 500.</h1>
+        <p class="lead">The Internet's plug may be dropped. Just wait a moment to plug again.</p>
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="{{ url_for('blog.index') }}" role="button">Try Again</a>
+        </p>
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

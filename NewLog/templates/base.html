@@ -1,0 +1,65 @@
+{#使用bootstrap-flask擴展#}
+{% from 'bootstrap/nav.html' import render_nav_item %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}{% endblock title %} | {{ admin.blog_title|default('Spring Fly') }}</title>
+        <link rel="icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/sketchy.bootstrap.min.css') }}" type="text/css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+    {% endblock head %}
+</head>
+<body>
+{% block nav %}
+    <nav class="fixed-top navbar navbar-expand-md navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('blog.index') }}">{{ admin.blog_title|default('NewLog') }}</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03"
+                    aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarColor03">
+                <ul class="navbar-nav mr-auto">
+                    {{ render_nav_item('blog.index', 'Home') }}
+                    {{ render_nav_item('blog.about', 'About') }}
+                    <li class="nav-item dropdown show">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">Theme</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">Sketchy</a>
+                            <a class="dropdown-item" href="#">Minty</a>
+                            <a class="dropdown-item" href="#">Litera</a>
+                            <a class="dropdown-item" href="#">Flatly</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Darkly</a>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+{% endblock nav %}
+
+<main class="container">
+    {% block content %}
+    {% endblock content %}
+
+    {% block footer %}
+    {% endblock footer %}
+</main>
+
+{% block scripts %}
+    <script type="application/javascript" src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
+    <script type="application/javascript" src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script type="application/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script type="application/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
+    {{ moment.include_moment(local_js=url_for('static', filename='js/moment-with-locales.min.js')) }}
+{% endblock scripts %}
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h1 class="display-3">About Me.</h1>
+        <p class="lead">{{ admin.about|safe }}</p>
+        <hr class="my-4">
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="#" role="button">Know more</a>
+        </p>
+    </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block nav %}{% endblock %}
+
+{% block title %}404 Not Found{% endblock %}
+
+{% block content %}
+    <div class="mt-5 text-center">
+        <h1 class="display-1">Oops! 404.</h1>
+        <p class="lead">This page disappeared like a ghost.</p>
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="{{ url_for('blog.index') }}" role="button">Take Me Home</a>
+        </p>
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

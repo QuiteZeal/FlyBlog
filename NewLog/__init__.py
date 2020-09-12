@@ -15,6 +15,8 @@ from NewLog.blueprints.blog import blog_bp
 from NewLog.config import config
 # flask擴展包，單獨放在extensions.py中
 from NewLog.extensions import bootstrap, db, ckeditor, mail, moment
+# 創建base.html上下文
+from NewLog.models import Admin, Post, Comment, Category, Link
 
 
 # 組織工廠函數：create_app()
@@ -63,14 +65,28 @@ def register_shell_context(app):
         return dict(db=db)
 
 
+# 處理模板上下文
 def register_template_context(app):
-    pass
+    @app.context_processor
+    def make_template_context():
+        admin = Admin.query.first()
+        categories = Category.query.order_by(Category.name).all()
+        links = Link.query.order_by(Link.name).all()
+        return dict(admin=admin, categories=categories, links=links)
 
 
 def register_errors(app):
     @app.errorhandler(400)
     def bad_request(e):
         return render_template('errors/400.html'), 400
+
+    @app.errorhandler(401)
+    def bad_request(e):
+        return render_template('errors/401.html'), 401
+
+    @app.errorhandler(403)
+    def bad_request(e):
+        return render_template('errors/403.html'), 403
 
     @app.errorhandler(404)
     def page_not_found(e):
@@ -82,20 +98,49 @@ def register_errors(app):
 
 
 def register_commands(app):
-    # command: flask init_db --drop
+    # command: flask initial --drop
+    # cannot use: init_db, than is wrong
     # 可手動刪除數據表後重建
     @app.cli.command()
     @click.option('--drop', is_flag=True, help='Create after drop')
-    def init_db(drop):
+    def initial(drop):
         """
             Initialize the database
-            usage: $ flask init_db --drop
+            usage: $ flask initial --drop
         """
         if drop:
-            click.confirm('Seriously? This operation will delete the whole database, do you want to continue?', abort=True)
+            click.confirm('Seriously? This operation will delete the database, do you want to continue?', abort=True)
             db.drop_all()
             click.echo('Drop all tables done!')
         db.create_all()
         click.echo('Reinitialized database.')
 
+    @app.cli.command()
+    @click.option('--category', default=10, help='Quantity of categories, default is 10. Use --category=[num] to set.')
+    @click.option('--post', default=50, help='Quantity of posts, default is 50. Use --post=[num] to set.')
+    @click.option('--comment', default=200, help='Quantity of comments, default is 200. Use --comment=[num] to set.')
+    def forge(category, post, comment):
+        from NewLog.fakes import fake_admin, fake_categories, fake_comments, fake_links, fake_posts
+        """
+            Generate fake data
+            usage: flask forge --category/post/comment=[num]
+        """
+        db.drop_all()
+        db.create_all()
 
+        click.echo('Generating the administrator...')
+        fake_admin()
+
+        click.echo('Generating %d categories...' % category)
+        fake_categories(category)
+
+        click.echo('Generating %d posts...' % post)
+        fake_posts(post)
+
+        click.echo('Generating %d comments...' % comment)
+        fake_comments(comment)
+
+        click.echo('Generating links...')
+        fake_links()
+
+        click.echo('Done.')
