@@ -1,5 +1,33 @@
 {% if posts %}
     {% for post in posts %}
-        <h3 class="text-primary"></h3>
+        <div class="container-md my-4">
+            <h2 class="text-primary">
+                <a href="{{ url_for('.show_post', post_id=post.id) }}">{{ post.title }}</a>
+            </h2>
+            <p class="lead">
+                {{ post.body|striptags|truncate }}
+            </p>
+            <div class="d-flex">
+                <a class="btn btn-outline-primary btn-sm mr-auto" href="{{ url_for('.show_post', post_id=post.id) }}"
+                   role="button">Read more</a>
+                <a href="{{ url_for('.show_post', post_id=post.id) }}" class="badge badge-success my-auto ml-1">
+                    Comments: {{ post.comments|length }}</a>
+                <a href="{{ url_for('.show_category', category_id=post.category.id) }}"
+                   class="badge badge-info my-auto ml-1">
+                    {{ post.category.name }}</a>
+                <a href="javascript:" class="badge badge-light my-auto ml-1">
+                    {{ moment(post.timestamp).format('LL') }}</a>
+            </div>
+        </div>
+        {% if not loop.last %}
+            <hr>
+        {% endif %}
     {% endfor %}
+{% else %}
+    <div class="mt-5 alert alert-dismissible alert-info">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4 class="alert-heading">Hey!</h4>
+        <p class="mb-0">Heads up! Nothing here, you need to write some.
+            <a href="{{ url_for('admin.new_post') }}" class="alert-link">Click here to write down your first article.</a>.</p>
+    </div>
 {% endif %}

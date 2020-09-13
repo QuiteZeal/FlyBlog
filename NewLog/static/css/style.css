@@ -2,3 +2,11 @@ body {
     min-height: 20rem;
     padding-top: 4.5rem;
 }
+
+a {
+    text-decoration: none;
+}
+
+.text-black {
+    color: #333;
+}
