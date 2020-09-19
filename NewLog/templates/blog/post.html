@@ -1,11 +1,106 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
 
-</body>
-</html>
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <div>
+        <h1 class="display-4 my-auto">{{ post.title }}</h1>
+        <div class="d-flex">
+            <a href="{{ url_for('.show_category', category_name=post.category.name) }}"
+               class="badge badge-info my-auto mr-1">
+                {{ post.category.name }}</a>
+            <a href="#postComment" class="badge badge-success my-auto mr-1">
+                Comments: {{ post.comments|length }}</a>
+            <a href="javascript:" class="badge badge-dark my-auto mr-1">
+                {{ moment(post.timestamp).format('LL') }}</a>
+            <a href="#" class="badge badge-warning my-auto ml-auto" data-toggle="modal" data-target="#permalinkModal">
+                Share</a>
+            <div id="permalinkModal" class="modal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Permalink</h5>
+                            <button type="button" class="close close-clear" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <fieldset>
+                                    <label class="control-label" for="readOnlyInput">Share Link</label>
+                                    <input class="form-control" id="shareLink" type="text" readonly=""
+                                           value="{{ url_for('.show_post', post_id=post.id, _external=True) }}">
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <p class='text-success hidden-first'>Copied</p>
+                            <button type="button" class="btn btn-primary" data-clipboard-action="copy"
+                                    data-clipboard-target="#shareLink">Copy
+                            </button>
+                            <button type="button" class="btn btn-secondary close-clear" data-dismiss="modal">Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="article">
+            {{ post.body|safe }}
+        </div>
+        <div id="postComment">
+            <h3>{{ comments|length }} Comments
+                <small>
+                    <a href="{{ url_for('.show_post', post_id=post.id, page=pagination.pages or 1) }}#postComment"
+                       class="badge badge-light my-auto mr-1"></a>
+                </small>
+            </h3>
+            {% if comments %}
+                <ul class="list-group">
+                    {% for comment in comments %}
+                        <div class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">
+                                    <a href="{% if comment.site %}{{ comment.site }}{% else %}#{% endif %}"
+                                       target="_blank">
+                                        {% if comment.from_admin %}
+                                            {{ admin.name }}
+                                        {% else %}
+                                            {{ comment.author }}
+                                        {% endif %}
+                                    </a>
+                                    {% if comment.from_admin %}
+                                        <span class="badge badge-pill badge-primary">Author</span>
+                                    {% endif %}
+                                    {% if comment.replied %}
+                                        <span class="badge badge-pill badge-secondary">Reply</span>
+                                    {% endif %}
+                                </h5>
+                                <small data-toggle="tooltip" data-placement="top" data-delay="500"
+                                       data-timestamp="{{ comment.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}">
+                                    {{ moment(comment.timestamp).fromNow() }}
+                                </small>
+                            </div>
+                            <p class="mb-1">{{ comment.body }}</p>
+                            {% if comment.replied %}
+                                <p class="alert alert-secondary">
+                                    {{ comment.replied.author }} :
+                                    <br>{{ comment.replied.body }}
+                                </p>
+                            {% endif %}
+                            <div class="d-flex flex-row-reverse">
+                                <a class="btn btn-outline-primary btn-sm"
+                                   href="{{ url_for('.reply_comment', comment_id=comment.id) }}">Reply</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="jumbotron text-center">
+                    <h5 class="text-muted my-auto">Focus on Reading.</h5>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -5,7 +5,7 @@
             {% for category in categories %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 {#    指向blog.show_category視圖    #}
-                <a href="{{ url_for('blog.show_category', category_id=category.id) }}">
+                <a href="{{ url_for('blog.show_category', category_name=category.name) }}">
                     {{ category.name }}
                 </a>
                 <span class="badge badge-primary badge-pill">{{ category.posts|length }}</span>

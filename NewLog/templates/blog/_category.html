@@ -1,0 +1,18 @@
+{% if posts %}
+    {% for post in posts %}
+        <div class="container-md my-4 d-flex">
+            <span class="text-muted my-auto mr-3">{{ moment(post.timestamp).format('LL') }}</span>
+            <h3 class="fs-1 text-primary my-auto">
+                <a href="{{ url_for('.show_post', post_id=post.id) }}">{{ post.title }}</a>
+            </h3>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="mt-5 alert alert-dismissible alert-info">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4 class="alert-heading">Hey!</h4>
+        <p class="mb-0">Heads up! Nothing here, you need to write some.
+            <a href="{{ url_for('admin.new_post') }}" class="alert-link">Click here to write down your first
+                article.</a>.</p>
+    </div>
+{% endif %}

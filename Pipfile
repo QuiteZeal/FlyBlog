@@ -16,6 +16,7 @@ bootstrap-flask = "*"
 flask-moment = "*"
 flask-ckeditor = "*"
 email-validator = "*"
+unidecode = "*"
 
 [requires]
 python_version = "3.8"

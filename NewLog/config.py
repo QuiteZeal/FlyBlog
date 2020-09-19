@@ -38,6 +38,8 @@ class BaseConfig(object):
     BLOG_POST_PER_PAGE = 8
     BLOG_MANAGE_POST_PER_PAGE = 12
     BLOG_COMMENT_PER_PAGE = 12
+    # ('theme name', 'display name')
+    BLOG_THEMES = {'sketchy': 'sketchy', 'minty': 'minty', 'flatly': 'flatly', 'darkly': 'darkly'}
 
 
 # 根據BaseConfig擴展

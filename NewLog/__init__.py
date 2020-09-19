@@ -62,7 +62,7 @@ def register_shell_context(app):
     # 配置Python Shell上下文
     @app.shell_context_processor
     def make_shell_context():
-        return dict(db=db)
+        return dict(db=db, Admin=Admin, Post=Post, Category=Category, Comment=Comment)
 
 
 # 處理模板上下文

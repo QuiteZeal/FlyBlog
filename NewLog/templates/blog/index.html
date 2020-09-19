@@ -1,18 +1,21 @@
 {% extends 'base.html' %}
+{#{% from 'blog/_macros.html' import pagenav %}#}
+{% from 'bootstrap/pagination.html' import render_pagination %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
     <div>
-        <h1 class="display-3">{{ admin.blog_title|default('Blog Name') }}</h1>
-        <h4 class="text-muted">{{ admin.blog_sub_title|default('Blog Descrpition') }}</h4>
+        <h1 class="display-3 my-auto">{{ admin.blog_title|default('Blog Name') }}</h1>
+        <h4 class="text-muted my-auto">{{ admin.blog_sub_title|default('Blog Descrpition') }}</h4>
     </div>
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-12">
             {% include 'blog/_posts.html' %}
-        </div>
-        <div class="col-sm-4">
-            {% include 'blog/_sidebar.html' %}
+            {% if posts %}
+                {{ render_pagination(pagination) }}
+{#                {{ pagenav(pagination) }}#}
+            {% endif %}
         </div>
     </div>
 {% endblock %}

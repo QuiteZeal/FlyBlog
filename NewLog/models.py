@@ -55,7 +55,7 @@ class Post(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     # 建立Post與Category之間的關係
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    category_name = db.Column(db.String(30), db.ForeignKey('category.name'))
     category = db.relationship('Category', back_populates='posts')
 
     can_comment = db.Column(db.Boolean, default=True)
