@@ -36,7 +36,7 @@ class BaseConfig(object):
     # 博客頁面的配置變量
     BLOG_EMAIL = os.getenv('BLOG EMAIL')
     BLOG_POST_PER_PAGE = 8
-    BLOG_MANAGE_POST_PER_PAGE = 12
+    BLOG_MANAGE_POST_PER_PAGE = 18
     BLOG_COMMENT_PER_PAGE = 12
     # ('theme name', 'display name')
     BLOG_THEMES = {'sketchy': 'sketchy', 'minty': 'minty', 'flatly': 'flatly', 'darkly': 'darkly'}

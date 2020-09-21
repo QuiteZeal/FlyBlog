@@ -10921,7 +10921,7 @@ select.form-control {
 [type="checkbox"]:before {
   content: "";
   position: absolute;
-  left: -1.2em;
+  left: 0;
   top: -0.9em;
   display: inline-block;
   width: 15px;
@@ -10933,7 +10933,7 @@ select.form-control {
 [type="checkbox"]:checked:after {
   content: "x";
   position: absolute;
-  left: -0.64em;
+  left: 0.14em;
   top: -0.48em;
   font-size: 1.5rem;
   line-height: 0.5;
@@ -10976,7 +10976,7 @@ select.form-control {
 }
 
 .form-check-label {
-  padding-left: 2.5rem;
+  padding-left: 1.2rem;
 }
 
 .form-check-inline [type="checkbox"]:before {

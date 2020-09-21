@@ -10,20 +10,33 @@ from NewLog.extensions import db
 # 用於生成timestamp
 from datetime import datetime
 
+# Generate Password
+from werkzeug.security import generate_password_hash, check_password_hash
+
+# UserMixin == user log status
+# is_authenticated, is_active, is_anonymous
+from flask_login import UserMixin
+
 """
     Flask-SQLAlchemy 模型名稱 --> 表名稱
     如：Admin -->admin, NavBar --> nav_bar
 """
 
 
-class Admin(db.Model):
+class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20))  # login_name
-    password_hash = db.Column(db.String(20))
-    blog_title = db.Column(db.String(20))
+    password_hash = db.Column(db.String(128))
+    blog_title = db.Column(db.String(50))
     blog_sub_title = db.Column(db.String(100))
     name = db.Column(db.String(30))  # display_name
     about = db.Column(db.Text)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def validate_password(self, password):
+        return check_password_hash(self.password_hash, password)  # True or False
 
 
 class Category(db.Model):
@@ -52,6 +65,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60))
     body = db.Column(db.Text)
+    # length = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     # 建立Post與Category之間的關係

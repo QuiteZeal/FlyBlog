@@ -7,13 +7,33 @@
 # 導入flask擴展包的內容單獨寫在extensions.py
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
-from flask_ckeditor import CKEditor
+# from flask_ckeditor import CKEditor
+from flask_pagedown import PageDown
 from flask_mail import Mail
 from flask_moment import Moment
+# Flask-login
+from flask_login import LoginManager
+from flask_wtf import CSRFProtect
 
 # 先不傳入參數
 bootstrap = Bootstrap()
 db = SQLAlchemy()
-ckeditor = CKEditor()
+# ckeditor = CKEditor()
+pagedown = PageDown()
 mail = Mail()
 moment = Moment()
+# Flask-login
+login_manager = LoginManager()
+csrf = CSRFProtect()
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    from NewLog.models import Admin
+    user = Admin.query.get(int(user_id))
+    return user
+
+
+login_manager.login_view = 'auth.login'
+login_manager.login_message = 'You want to write? Login.'
+login_manager.login_message_category = 'warning'

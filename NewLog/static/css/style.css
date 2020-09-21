@@ -1,6 +1,5 @@
-body {
-    min-height: 20rem;
-    padding-top: 4.5rem;
+main {
+    margin-top: 4.5rem;
 }
 
 a {
@@ -9,6 +8,18 @@ a {
 
 .link-line {
     text-decoration: underline;
+}
+
+/*
+    add tag link offset
+*/
+#postComment::before {
+    display: block;
+    content: " ";
+    margin-top: -4.5rem;
+    height: 4.5rem;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 /*
@@ -23,20 +34,34 @@ a {
 .fs-sm {
     font-size: 0.875rem;
 }
+
 .fs-0 {
     font-size: 1rem;
 }
+
 .fs-1 {
     font-size: 1.25rem;
 }
+
 .fs-2 {
     font-size: 1.5rem;
 }
+
 .fs-3 {
     font-size: 1.75rem;
 }
+
 .fs-lg {
     font-size: 3rem;
+}
+
+.margin-bottom {
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+}
+
+.margin-login {
+    margin-top: 4rem;
 }
 
 .hidden-first {
@@ -47,4 +72,25 @@ a {
     margin: 0.5rem 0;
     padding: 1rem 0;
     text-align: justify;
+    font-weight: normal;
+}
+
+/*
+    fix bug: sketchy.bootstrap.css
+*/
+/*[type="checkbox"]:before {*/
+/*    left: 0;*/
+/*}*/
+
+/*[type="checkbox"]:checked:after {*/
+/*    left: 0.18rem;*/
+/*}*/
+
+
+/*
+    fix *.bootstrap.css
+*/
+.table th,
+.table td {
+    vertical-align: middle;
 }

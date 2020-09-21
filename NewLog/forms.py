@@ -8,7 +8,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, \
     SelectField, ValidationError, TextAreaField, HiddenField
 from wtforms.validators import DataRequired, Length, Email, URL, Optional
-from flask_ckeditor import CKEditorField
+# from flask_ckeditor import CKEditorField
+from flask_pagedown.fields import PageDownField
 
 # 需要對Category添加自定義驗證器
 from NewLog.models import Category
@@ -25,15 +26,15 @@ class SettingForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(1, 60)])
     blog_title = StringField('Blog Title', validators=[DataRequired(), Length(1, 60)])
     blog_sub_title = StringField('Blog Sub Title', validators=[DataRequired(), Length(1, 120)])
-    about = CKEditorField('About Me', validators=[DataRequired()])
+    about = PageDownField('About Me', validators=[DataRequired()])
     submit = SubmitField()
 
 
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(1, 100)])
     category = SelectField('Category', coerce=int, default=1)
-    body = CKEditorField('Body', validators=[DataRequired()])
-    submit = SubmitField
+    body = PageDownField('Body', validators=[DataRequired()])
+    submit = SubmitField()
 
     # category下拉列表，使用構造方法執行
     def __init__(self, *args, **kwargs):

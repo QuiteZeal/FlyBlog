@@ -7,6 +7,9 @@
 import os
 
 from flask import Flask, render_template
+from flask_wtf.csrf import CSRFError
+from flask_login import current_user
+from datetime import datetime
 import click
 
 from NewLog.blueprints.admin import admin_bp
@@ -14,7 +17,7 @@ from NewLog.blueprints.auth import auth_bp
 from NewLog.blueprints.blog import blog_bp
 from NewLog.config import config
 # flask擴展包，單獨放在extensions.py中
-from NewLog.extensions import bootstrap, db, ckeditor, mail, moment
+from NewLog.extensions import bootstrap, db, pagedown, mail, moment, login_manager, csrf
 # 創建base.html上下文
 from NewLog.models import Admin, Post, Comment, Category, Link
 
@@ -44,12 +47,15 @@ def register_logging(app):
     pass  # 部署上線
 
 
+# 注册后才能使用！！
 def register_extensions(app):
     bootstrap.init_app(app)
     db.init_app(app)
-    ckeditor.init_app(app)
+    pagedown.init_app(app)
     mail.init_app(app)
     moment.init_app(app)
+    login_manager.init_app(app)
+    csrf.init_app(app)
 
 
 def register_blueprints(app):
@@ -65,20 +71,32 @@ def register_shell_context(app):
         return dict(db=db, Admin=Admin, Post=Post, Category=Category, Comment=Comment)
 
 
-# 處理模板上下文
+# 處理模板上下文，重要！
 def register_template_context(app):
     @app.context_processor
     def make_template_context():
         admin = Admin.query.first()
         categories = Category.query.order_by(Category.name).all()
         links = Link.query.order_by(Link.name).all()
-        return dict(admin=admin, categories=categories, links=links)
+        date_now = datetime.utcnow()
+        # unread_comments
+        if current_user.is_authenticated:
+            unread_comments = Comment.query.filter_by(reviewed=False).count()
+        else:
+            unread_comments = None
+        return dict(
+            admin=admin, categories=categories, links=links,
+            date_now=date_now, unread_comments=unread_comments)
 
 
 def register_errors(app):
     @app.errorhandler(400)
     def bad_request(e):
         return render_template('errors/400.html'), 400
+
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(e):
+        return render_template('400.html', description=e.description), 400
 
     @app.errorhandler(401)
     def bad_request(e):
@@ -143,4 +161,42 @@ def register_commands(app):
         click.echo('Generating links...')
         fake_links()
 
+        click.echo('Done.')
+
+    # Initialize Administrator
+    @app.cli.command()
+    @click.option('--username', prompt=True, help='Set admin login username.')
+    @click.option('--password', prompt=True, hide_input=True,
+                  confirmation_prompt=True, help='Set admin login password.')
+    def initialize(username, password):
+        """
+        Initialize Administrator Account
+        """
+        click.echo('Initializing the database...')
+        db.create_all()
+
+        admin = Admin.query.first()
+        if admin is not None:
+            click.echo('The administrator already exists, updating account...')
+            admin.username = username
+            admin.set_password(password)
+        else:
+            click.echo('Creating new administrator account...')
+            admin = Admin(
+                username=username,
+                blog_title='Spring Fly',
+                blog_sub_title='Thinking and write.',
+                name='Spring Fly',
+                about='A self-educated writer'
+            )
+            admin.set_password(password)
+            db.session.add(admin)
+
+        category = Category.query.first()
+        if category is None:
+            click.echo('Initialize the category...')
+            category = Category(name='Unnamed')
+            db.session.add(category)
+
+        db.session.commit()
         click.echo('Done.')

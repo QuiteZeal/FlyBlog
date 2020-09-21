@@ -1,7 +1,7 @@
 {% if posts %}
     {% for post in posts %}
-        <div class="container-md my-4 d-flex">
-            <span class="text-muted my-auto mr-3">{{ moment(post.timestamp).format('LL') }}</span>
+        <div class="container-md my-4">
+            <span class="text-muted my-auto">{{ moment(post.timestamp).format('ll') }}</span>
             <h3 class="fs-1 text-primary my-auto">
                 <a href="{{ url_for('.show_post', post_id=post.id) }}">{{ post.title }}</a>
             </h3>

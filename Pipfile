@@ -17,6 +17,11 @@ flask-moment = "*"
 flask-ckeditor = "*"
 email-validator = "*"
 unidecode = "*"
+flask-pagedown = "*"
+flask-login = "*"
+markdown = "*"
+bleach = "*"
+flask-simplemde = "*"
 
 [requires]
 python_version = "3.8"

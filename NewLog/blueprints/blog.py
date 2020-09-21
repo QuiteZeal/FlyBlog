@@ -5,6 +5,7 @@
     @Create: 2020/9/9 21:07
 """
 from flask import Blueprint, render_template, request, current_app, abort, make_response, flash, redirect, url_for
+from flask_login import current_user
 
 from NewLog.emails import send_new_comment_email, send_new_reply_email
 from NewLog.models import Post, Category, Comment
@@ -13,6 +14,11 @@ from NewLog.forms import AdminCommentForm, CommentForm
 from NewLog.extensions import db
 
 blog_bp = Blueprint('blog', __name__)
+
+
+# # Flask-Login
+# class current_user:
+#     is_authenticated = False
 
 
 @blog_bp.route('/')
@@ -28,7 +34,6 @@ def index():
 
 @blog_bp.route('/about')
 def about():
-    # return 'The About Page'
     return render_template('blog/about.html')
 
 
@@ -58,11 +63,40 @@ def show_post(post_id):
         page, per_page)
     comments = pagination.items
 
-    # if current_app.is_authenticated:
-    #     form = AdminCommentForm()
-    #     form.author.data = current_user.name  # need Flask-Login
+    if current_user.is_authenticated:
+        form = AdminCommentForm()
+        form.author.data = current_user.name  # need Flask-Login
+        form.email.data = current_app.config['BLOG_EMAIL']
+        form.site.data = url_for('.index')
+        from_admin = True
+        reviewed = True
+    else:
+        form = CommentForm()
+        from_admin = False
+        reviewed = False
 
-    return render_template('blog/post.html', post=post, pagination=pagination, comments=comments)
+    if form.validate_on_submit():
+        author = form.author.data
+        email = form.email.data
+        site = form.site.data
+        body = form.body.data
+        comment = Comment(
+            author=author, email=email, site=site, body=body,
+            post=post, from_admin=from_admin, reviewed=reviewed)
+        replied_id = request.args.get('reply')
+        if replied_id:
+            replied_comment = Comment.query.get_or_404(replied_id)
+            comment.replied = replied_comment
+            send_new_reply_email(replied_comment)
+        db.session.add(comment)
+        db.session.commit()
+        if current_user.is_authenticated:
+            flash('Comment published.', 'success')
+        else:
+            flash('Thanks, your comment will be published after reviewed.', 'info')
+            send_new_comment_email(post)  # to admin
+        return redirect(url_for('.show_post', post_id=post_id))
+    return render_template('blog/post.html', post=post, pagination=pagination, form=form, comments=comments)
 
 
 @blog_bp.route('/reply/comment/<int:comment_id>')
@@ -70,9 +104,9 @@ def reply_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     if not comment.post.can_comment:
         flash('Only Read, No Discuss.', 'warning')
-        return redirect(
-            url_for('.show_post', post_id=comment.post_id, reply=comment_id, author=comment.author) + '#commentForm'
-        )
+        return redirect(url_for('.show_post', post_id=comment.post.id))
+    return redirect(
+        url_for('.show_post', post_id=comment.post_id, reply=comment_id, author=comment.author) + '#commentForm')
 
 
 @blog_bp.route('/change-theme/<theme_name>')

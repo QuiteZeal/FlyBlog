@@ -18,3 +18,9 @@
     </nav>
 {% endmacro %}
 
+{% macro nav_link(endpoint, text) -%}
+    <li class="nav-item" {% if request.endpoint
+    and request.endpoint==endpoint %}active{% endif %}>
+        <a href="{{ url_for(endpoint, **kwargs) }}" class="nav-link">{{ text }}</a>
+    </li>
+{%- endmacro %}

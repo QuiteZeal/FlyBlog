@@ -1,11 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
 
-</body>
-</html>
+{% block title %}Login{% endblock %}
+
+{#{% block nav %}{% endblock %}#}
+
+{% block content %}
+    <div class="margin-login h-100 container-md">
+        <div class="h-100 row justify-content-center">
+            <h1>Log In</h1>
+        </div>
+        <div class="h-100 row justify-content-center">
+            {{ render_form(form, extra_classes='col-md-6') }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+

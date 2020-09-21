@@ -1,5 +1,6 @@
 {#使用bootstrap-flask擴展#}
 {% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'blog/_macros.html' import nav_link %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,80 +16,134 @@
     {% endblock head %}
 </head>
 <body>
-{% block nav %}
-    <nav class="fixed-top navbar navbar-expand-md {% if request.cookies.get('theme', 'sketchy')=='sketchy' %}navbar-light bg-light{% else %}navbar-dark bg-primary{% endif %}">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('blog.index') }}">{{ admin.blog_title|default('NewLog') }}</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03"
-                    aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+<header>
+    {% block nav %}
+        <nav class="fixed-top navbar navbar-expand-md {% if request.cookies.get('theme', 'sketchy')=='sketchy' %}navbar-light bg-light{% else %}navbar-dark bg-primary{% endif %}">
+            <div class="container-md">
+                <a class="navbar-brand" href="{{ url_for('blog.index') }}">{{ admin.blog_title|default('NewLog') }}</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03"
+                        aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="collapse navbar-collapse" id="navbarColor03">
-                <ul class="navbar-nav mr-auto">
-                    {{ render_nav_item('blog.overview', 'Overview') }}
-                    {{ render_nav_item('blog.about', 'About') }}
-                    {% if categories %}
+                <div class="collapse navbar-collapse" id="navbarColor03">
+                    <ul class="navbar-nav mt-2 mr-auto">
+                        {{ render_nav_item('blog.overview', 'Overview') }}
+                        {{ render_nav_item('blog.about', 'About') }}
+                        {% if categories %}
+                            <li class="nav-item dropdown show">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                   aria-haspopup="true" aria-expanded="false">Category</a>
+                                <div class="dropdown-menu">
+                                    {% for category in categories %}
+                                        <a class="dropdown-item d-flex justify-content-between"
+                                           href="{{ url_for('blog.show_category', category_name=category.name) }}">
+                                            {{ category.name }}
+                                            <span class="badge badge-pill badge-light">{{ category.posts|length }}</span>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </li>
+                        {% endif %}
+
+                        {% if links %}
+                            <li class="nav-item dropdown show">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                   aria-haspopup="true" aria-expanded="false">Link</a>
+                                <div class="dropdown-menu">
+                                    {% for link in links %}
+                                        <a class="dropdown-item" href="{{ link.url }}" target="_blank">
+                                            {{ link.name }}</a>
+                                    {% endfor %}
+                                </div>
+                            </li>
+                        {% endif %}
+
                         <li class="nav-item dropdown show">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-                               aria-haspopup="true" aria-expanded="false">Category</a>
+                               aria-haspopup="true" aria-expanded="false">Theme</a>
                             <div class="dropdown-menu">
-                                {% for category in categories %}
-                                    <a class="dropdown-item d-flex justify-content-between"
-                                       href="{{ url_for('blog.show_category', category_name=category.name) }}">
-                                        {{ category.name }}
-                                        <span class="badge badge-pill badge-light">{{ category.posts|length }}</span>
-                                    </a>
+                                {% for theme_name, display_name in config.BLOG_THEMES.items() %}
+                                    {% if display_name=='darkly' %}
+                                        <div class="dropdown-divider"></div>
+                                    {% endif %}
+                                    <a class="dropdown-item"
+                                       href="{{ url_for('blog.change_theme', theme_name=theme_name, next=request.full_path) }}">{{ display_name }}</a>
                                 {% endfor %}
                             </div>
                         </li>
-                    {% endif %}
-
-                    {% if links %}
-                        <li class="nav-item dropdown show">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-                               aria-haspopup="true" aria-expanded="false">Link</a>
-                            <div class="dropdown-menu">
-                                {% for link in links %}
-                                    <a class="dropdown-item" href="{{ link.url }}" target="_blank">
-                                        {{ link.name }}</a>
-                                {% endfor %}
-                            </div>
-                        </li>
-                    {% endif %}
-
-                    <li class="nav-item dropdown show">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-                           aria-haspopup="true" aria-expanded="false">Theme</a>
-                        <div class="dropdown-menu">
-                            {% for theme_name, display_name in config.BLOG_THEMES.items() %}
-                                {% if display_name=='darkly' %}
+                    </ul>
+                    <ul class="navbar-nav mt-2 ml-auto">
+                        {% if current_user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                   aria-haspopup="true" aria-expanded="false">New</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{{ url_for('admin.new_post') }}">Post</a>
+                                    <a class="dropdown-item" href="{{ url_for('admin.new_category') }}">Category</a>
+                                    <a class="dropdown-item" href="{{ url_for('admin.new_link') }}">Link</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    Manage
+                                    {% if unread_comments %}
+                                        <span class="badge badge-pill badge-info">new</span>
+                                    {% endif %}
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{{ url_for('admin.manage_post') }}">Post</a>
+                                    <a class="dropdown-item" href="{{ url_for('admin.manage_category') }}">Category</a>
+                                    <a class="dropdown-item" href="{{ url_for('admin.manage_link') }}">Link</a>
                                     <div class="dropdown-divider"></div>
-                                {% endif %}
-                                <a class="dropdown-item"
-                                   href="{{ url_for('blog.change_theme', theme_name=theme_name, next=request.full_path) }}">{{ display_name }}</a>
-                            {% endfor %}
-                        </div>
-                    </li>
-                </ul>
-
+                                    <a class="dropdown-item d-flex" href="{{ url_for('admin.manage_comment') }}">
+                                        Comment
+                                        {% if unread_comments %}
+                                            <span class="ml-auto badge badge-pill badge-light">{{ unread_comments }}</span>
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            </li>
+                            {{ nav_link('admin.settings', 'Settings') }}
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
-{% endblock nav %}
+        </nav>
+    {% endblock nav %}
+</header>
 
-<main class="container">
+<main class="container-md">
+    {% for message in get_flashed_messages(with_categories=True) %}
+        <div class="alert alert-dismissible alert-{{ message[0] }}">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message[1] }}
+        </div>
+    {% endfor %}
+
     {% block content %}
     {% endblock content %}
 
     {% block footer %}
-
+        <div class="margin-bottom text-muted d-flex justify-content-between">
+            <div>
+                &copy; {{ date_now.year }} <a href="https://github.com/Spring-Fly" target="_blank"
+                                              title="Design by Spring Fly">Spring Fly</a>
+            </div>
+            <div>
+                {% if current_user.is_authenticated %}
+                    <a class="mr-1" href="{{ url_for('auth.logout', next=request.full_path) }}">Logout</a>
+                {% endif %}
+                <a href="#">Back to Top</a>
+            </div>
+        </div>
     {% endblock footer %}
 </main>
 
 {% block scripts %}
     <script type="application/javascript" src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
-{#    <script type="application/javascript" src="{{ url_for('static', filename='js/popper.min.js') }}"></script>#}
+    {#    <script type="application/javascript" src="{{ url_for('static', filename='js/popper.min.js') }}"></script>#}
     <script type="application/javascript" src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
     <script type="application/javascript" src="{{ url_for('static', filename='js/clipboard.min.js') }}"></script>
     <script type="application/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
