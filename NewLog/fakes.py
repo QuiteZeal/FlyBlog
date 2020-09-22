@@ -25,7 +25,7 @@ def fake_admin():
         blog_title='Spring Fly',
         blog_sub_title='Just for Writing.',
         name='Fly',
-        about='From here, to write there.'
+        body='From here, to write there.'
     )
     db.session.add(admin)
     db.session.commit()

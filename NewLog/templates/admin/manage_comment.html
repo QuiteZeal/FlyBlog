@@ -1,11 +1,95 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
 
-</body>
-</html>
+{% block title %}Manage Comments{% endblock %}
+
+{% block content %}
+    <div class="d-flex pt-3 pb-2">
+        <h1 class="mr-auto">
+            Comments <small class="text-muted">{{ pagination.total }}</small>
+        </h1>
+        <ul class="nav nav-pills">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                   aria-expanded="false">Filter</a>
+                <div class="dropdown-menu" style="">
+                    <a class="dropdown-item" href="{{ url_for('admin.manage_comment', filter='all') }}">All</a>
+                    <div class="d-flex">
+                        <a class="dropdown-item"
+                           href="{{ url_for('admin.manage_comment', filter='unread') }}">Unread</a>
+                        {% if unread_comments %}
+                            <span class="badge badge-pill badge-light">{{ unread_comments }}</span>{% endif %}
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ url_for('admin.manage_comment', filter='admin') }}">From Me</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+    {% if comments %}
+        <table class="table table-hover table-striped">
+            <thead>
+            <tr>
+                <th>No.</th>
+                <th>Author</th>
+                <th>Content</th>
+                <th>Date</th>
+                <th>Operate</th>
+            </tr>
+            </thead>
+            {% for comment in comments %}
+                <tr {% if not comment.reviewed %}class="table-warning"{% endif %}>
+                    <th>{{ loop.index + ((pagination.page - 1) * config.BLOG_MANAGE_COMMENT_PER_PAGE) }}</th>
+                    <th>
+                        <div class="d-inline">
+                            {% if comment.from_admin %}
+                                {{ admin.name }}
+                            {% else %}
+                                {% if comment.site %}
+                                    <a href="{{ comment.site }}" target="_blank">{{ comment.author }}</a>
+                                {% else %}
+                                    {{ comment.author }}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        <div class="d-inline">
+                            {% if comment.from_admin %}
+                                <span class="badge badge-pill badge-info">Author</span>
+                            {% else %}
+                                <a href="mailto:{{ comment.email }}" class="badge badge-pill badge-light">Email</a>
+                            {% endif %}
+                        </div>
+                    </th>
+                    <th>{{ comment.body }}</th>
+                    <th>{{ moment(comment.timestamp).format('ll') }}</th>
+                    <th>
+                        {% if not comment.reviewed %}
+                            <form method="post" class="d-inline mr-1"
+                                  action="{{ url_for('.approve_comment', comment_id=comment.id, next=request.full_path) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                            </form>
+                        {% endif %}
+                        <a class="mr-1 btn btn-sm btn-info" href="{{ url_for('blog.show_post', post_id=comment.post.id) }}">Post</a>
+                        <form method="post" class="d-inline"
+                              action="{{ url_for('.delete_comment', comment_id=comment.id, next=request.full_path) }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Are you serious?');">Delete
+                            </button>
+                        </form>
+                    </th>
+                </tr>
+            {% endfor %}
+        </table>
+        <div class="mt-5">{{ render_pagination(pagination) }}</div>
+    {% else %}
+        <div class="mt-5 alert alert-dismissible alert-info">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <h4 class="alert-heading">Come on!</h4>
+            <p class="mb-0">Come on! Reading more and thinking more.
+                <a href="{{ url_for('admin.new_post') }}" class="alert-link"> Click here to write.</a>.</p>
+        </div>
+    {% endif %}
+
+{% endblock %}

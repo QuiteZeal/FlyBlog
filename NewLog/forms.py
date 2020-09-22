@@ -26,7 +26,7 @@ class SettingForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(1, 60)])
     blog_title = StringField('Blog Title', validators=[DataRequired(), Length(1, 60)])
     blog_sub_title = StringField('Blog Sub Title', validators=[DataRequired(), Length(1, 120)])
-    about = PageDownField('About Me', validators=[DataRequired()])
+    body = PageDownField('About Me', validators=[DataRequired()])
     submit = SubmitField()
 
 

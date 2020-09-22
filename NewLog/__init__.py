@@ -187,7 +187,7 @@ def register_commands(app):
                 blog_title='Spring Fly',
                 blog_sub_title='Thinking and write.',
                 name='Spring Fly',
-                about='A self-educated writer'
+                body='A self-educated writer'
             )
             admin.set_password(password)
             db.session.add(admin)

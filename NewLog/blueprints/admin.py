@@ -5,7 +5,7 @@
     @Create: 2020/9/9 21:07
 """
 from flask import Blueprint, render_template, redirect, url_for, request, current_app, flash
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from NewLog.forms import SettingForm, PostForm, CategoryForm, LinkForm
 from NewLog.utils import redirect_back
@@ -24,6 +24,19 @@ def login_protect():
 @admin_bp.route('/settings', methods=['GET', 'POST'])
 def settings():
     form = SettingForm()
+    if form.validate_on_submit():
+        current_user.name = form.name.data
+        current_user.blog_title = form.blog_title.data
+        current_user.blog_sub_title = form.blog_sub_title.data
+        current_user.body = form.body.data
+
+        db.session.commit()
+        flash('Setting updated.', 'success')
+        return redirect(url_for('blog.index'))
+    form.name.data = current_user.name
+    form.blog_title.data = current_user.blog_title
+    form.blog_sub_title = current_user.blog_sub_title
+    form.body.data = current_user.body
     return render_template('admin/settings.html', form=form)
 
 
@@ -55,7 +68,19 @@ def new_post():
 
 @admin_bp.route('/post/<int:post_id>/edit', methods=['GET', 'POST'])
 def edit_post(post_id):
-    form = PostForm
+    form = PostForm()
+    post = Post.query.get_or_404(post_id)
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.body = form.body.data
+        post.category = Category.query.get(form.category.data)
+
+        db.session.commit()
+        flash('Post updated.', 'success')
+        return redirect(url_for('blog.show_post', post_id=post.id))
+    form.title.data = post.title
+    form.body.data = post.body
+    form.category.data = post.category_name
     return render_template('admin/edit_post.html', form=form)
 
 
@@ -84,17 +109,37 @@ def set_comment(post_id):
 
 @admin_bp.route('/comment/manage')
 def manage_comment():
-    return render_template('admin/manage_comment.html')
+    filter_rule = request.args.get('filter', 'all')  # 'all', 'unreviewed', 'admin'
+    page = request.args.get('page', 1, type=int)
+    per_page = current_app.config['BLOG_MANAGE_COMMENT_PER_PAGE']
+    if filter_rule == 'unread':
+        filtered_comments = Comment.query.filter_by(reviewed=False)
+    elif filter_rule == 'admin':
+        filtered_comments = Comment.query.filter_by(from_admin=True)
+    else:
+        filtered_comments = Comment.query
+
+    pagination = filtered_comments.order_by(Comment.timestamp.desc()).paginate(page, per_page=per_page)
+    comments = pagination.items
+    return render_template('admin/manage_comment.html', comments=comments, pagination=pagination)
 
 
 # 評論審核通過
 @admin_bp.route('/comment/<int:comment_id>/approve', methods=['POST'])
 def approve_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    comment.reviewed = True
+    db.session.commit()
+    flash('Comment published.', 'success')
     return redirect_back()
 
 
 @admin_bp.route('/comment/<int:comment_id>/delete', methods=['POST'])
 def delete_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    db.session.delete(comment)
+    db.session.commit()
+    flash('Comment deleted.', 'success')
     return redirect_back()
 
 
@@ -109,14 +154,14 @@ def new_category():
     return render_template('admin/new_category.html', form=form)
 
 
-@admin_bp.route('/category/<int:category_id>/edit', methods=['GET', 'POST'])
-def edit_category(category_id):
+@admin_bp.route('/category/<int:category_name>/edit', methods=['GET', 'POST'])
+def edit_category(category_name):
     form = CategoryForm()
     return render_template('admin/edit_category.html', form=form)
 
 
-@admin_bp.route('/category/<int:category_id>/delete', methods=['POST'])
-def delete_category(category_id):
+@admin_bp.route('/category/<int:category_name>/delete', methods=['POST'])
+def delete_category(category_name):
     return redirect(url_for('.manage_category'))
 
 

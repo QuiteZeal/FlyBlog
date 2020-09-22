@@ -6,15 +6,12 @@
 """
 # 創建管理員模型:Admin, Category
 from NewLog.extensions import db
-
+from NewLog.utils import on_changed_body
 # 用於生成timestamp
 from datetime import datetime
-
 # Generate Password
 from werkzeug.security import generate_password_hash, check_password_hash
-
-# UserMixin == user log status
-# is_authenticated, is_active, is_anonymous
+# UserMixin == user log status (is_authenticated, is_active, is_anonymous)
 from flask_login import UserMixin
 
 """
@@ -30,13 +27,17 @@ class Admin(db.Model, UserMixin):
     blog_title = db.Column(db.String(50))
     blog_sub_title = db.Column(db.String(100))
     name = db.Column(db.String(30))  # display_name
-    about = db.Column(db.Text)
+    body = db.Column(db.Text)
+    body_html = db.Column(db.Text)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def validate_password(self, password):
         return check_password_hash(self.password_hash, password)  # True or False
+
+
+db.event.listen(Admin.body, 'set', on_changed_body)
 
 
 class Category(db.Model):
@@ -65,6 +66,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60))
     body = db.Column(db.Text)
+    body_html = db.Column(db.Text)
     # length = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
@@ -75,6 +77,9 @@ class Post(db.Model):
     can_comment = db.Column(db.Boolean, default=True)
     # delete-orphan 可以將評論comments從文章post中移除
     comments = db.relationship('Comment', back_populates='post', cascade='all, delete-orphan')
+
+
+db.event.listen(Post.body, 'set', on_changed_body)
 
 
 class Comment(db.Model):

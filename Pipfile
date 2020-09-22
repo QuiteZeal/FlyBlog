@@ -22,6 +22,7 @@ flask-login = "*"
 markdown = "*"
 bleach = "*"
 flask-simplemde = "*"
+pygments = "*"
 
 [requires]
 python_version = "3.8"

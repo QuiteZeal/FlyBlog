@@ -5,7 +5,13 @@
 {% block content %}
     <div class="jumbotron my-4">
         <h1 class="display-3">About Me.</h1>
-        <p class="lead">{{ admin.about|safe }}</p>
+        <p class="lead">
+            {% if admin.body_html %}
+                {{ admin.body_html|safe }}
+            {% else %}
+                {{ admin.body|safe }}
+            {% endif %}
+        </p>
         <hr class="my-4">
         <p class="lead">
             <a class="btn btn-primary btn-lg" href="#" role="button">Know more</a>

@@ -1,11 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
 
-</body>
-</html>
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+    <div class="pt-3 pb-2">
+        <h1>Settings</h1>
+    </div>
+    {{ render_form(form) }}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript" src="{{ url_for('static', filename='pagedown-extra/pagedown/Markdown.Converter.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='pagedown-extra/pagedown/Markdown.Sanitizer.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='pagedown-extra/Markdown.Extra.js') }}"></script>
+{% endblock %}

@@ -6,7 +6,7 @@
 
 {% block content %}
     <div>
-        <h1 class="display-5 my-2">{{ post.title }}</h1>
+        <h1 class="display-5 my-2 pt-2">{{ post.title }}</h1>
         <div class="d-flex">
             <a href="{{ url_for('.show_category', category_name=post.category.name) }}"
                class="badge badge-info my-auto mr-1">
@@ -48,7 +48,11 @@
             </div>
         </div>
         <div class="article">
-            {{ post.body|safe }}
+            {% if post.body_html %}
+                {{ post.body_html|safe }}
+            {% else %}
+                {{ post.body|safe }}
+            {% endif %}
         </div>
         <div id="postComment">
             <h3>{{ comments|length }} Comments

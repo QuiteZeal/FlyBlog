@@ -1,14 +1,20 @@
 {% if posts %}
     {% for post in posts %}
         <div class="container-md my-4">
-            <h2 class="fs-3 text-primary my-auto">
-                <a href="{{ url_for('.show_post', post_id=post.id) }}">{{ post.title }}</a>
-            </h2>
-            <span class="text-muted fs-sm my-auto">
+            <div class="d-flex mb-3 border-bottom">
+                <h2 class="fs-2 text-primary my-auto">
+                    <a href="{{ url_for('.show_post', post_id=post.id) }}">{{ post.title }}</a>
+                </h2>
+                <span class="text-muted my-auto ml-auto">
                 {{ moment(post.timestamp).format('LL') }}</span>
-            <p class="lead text-justify my-auto py-2 fs-0">
-                {{ post.body|striptags|truncate }}
-            </p>
+            </div>
+            <article class="article-preview">
+                {% if post.body_html %}
+                    {{ post.body_html|safe|truncate(155, False, ' ...', 5) }}
+                {% else %}
+                    {{ post.body|safe|truncate(155, False, ' ...', 5) }}
+                {% endif %}
+            </article>
             <div class="d-flex">
                 <a id="readMore" class="btn btn-outline-primary btn-sm mr-auto"
                    href="{{ url_for('.show_post', post_id=post.id) }}"
@@ -19,12 +25,11 @@
                 <a href="{{ url_for('.show_category', category_name=post.category.name) }}"
                    class="badge badge-info my-auto ml-1">
                     {{ post.category.name }}</a>
-
             </div>
         </div>
-        {% if not loop.last %}
-            <hr>
-        {% endif %}
+{#                {% if not loop.last %}#}
+{#                    <hr>#}
+{#                {% endif %}#}
     {% endfor %}
 {% else %}
     <div class="mt-5 alert alert-dismissible alert-info">
