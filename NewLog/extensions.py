@@ -15,7 +15,6 @@ from flask_moment import Moment
 from flask_login import LoginManager
 from flask_wtf import CSRFProtect
 from flask_migrate import Migrate
-from flask_sslify import SSLify
 
 # 先不傳入參數
 bootstrap = Bootstrap()
@@ -28,7 +27,6 @@ moment = Moment()
 login_manager = LoginManager()
 csrf = CSRFProtect()
 migrate = Migrate()
-sslify = SSLify()
 
 
 @login_manager.user_loader

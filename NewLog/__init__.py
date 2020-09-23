@@ -19,9 +19,11 @@ from NewLog.blueprints.auth import auth_bp
 from NewLog.blueprints.blog import blog_bp
 from NewLog.config import config
 # flask擴展包，單獨放在extensions.py中
-from NewLog.extensions import bootstrap, db, pagedown, mail, moment, login_manager, csrf, migrate, sslify
+from NewLog.extensions import bootstrap, db, pagedown, mail, moment, login_manager, csrf, migrate
 # 創建base.html上下文
 from NewLog.models import Admin, Post, Comment, Category, Link
+
+basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 
 # 組織工廠函數：create_app()
@@ -69,7 +71,7 @@ def register_logging(app):
     mail_handler = SMTPHandler(
         mailhost=app.config['MAIL_SERVER'],
         fromaddr=app.config['MAIL_USERNAME'],
-        toaddrs=app.config['BLOG_MAIL'],
+        toaddrs=app.config['BLOG_EMAIL'],
         subject='Spring Fly occur Error',
         credentials=(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD']))
     mail_handler.setLevel(logging.ERROR)
@@ -90,7 +92,6 @@ def register_extensions(app):
     login_manager.init_app(app)
     csrf.init_app(app)
     migrate.init_app(app, db)
-    sslify.init_app(app)
 
 
 def register_blueprints(app):
