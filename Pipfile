@@ -24,6 +24,7 @@ bleach = "*"
 pygments = "*"
 flask-migrate = "*"
 flask-sslify = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"

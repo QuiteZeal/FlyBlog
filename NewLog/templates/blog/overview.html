@@ -1,11 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block nav %}{% endblock %}
+
+{% block title %}Overview{% endblock %}
+
+{% block content %}
+    <div class="mt-5 text-center">
+        <h1 class="display-3">Waiting...</h1>
+        <p class="lead">Waiting for? or waiting for see you.</p>
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="{{ url_for('blog.index') }}" role="button">Take Me Home</a>
+        </p>
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

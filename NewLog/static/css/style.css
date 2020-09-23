@@ -1,10 +1,5 @@
-@font-face {
-    font-family: NotoSansSC;
-    src: url("../font/NotoSansSC-Regular.otf");
-}
-
 body {
-    font-family: "Neucha", NotoSansSC, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: "Neucha", 'Hiragino Sans GB', 'Microsoft Yahei', 'WenQuanYi Micro Hei', -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 1rem;
     font-weight: normal;
 }
