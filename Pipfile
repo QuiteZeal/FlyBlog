@@ -21,8 +21,9 @@ flask-pagedown = "*"
 flask-login = "*"
 markdown = "*"
 bleach = "*"
-flask-simplemde = "*"
 pygments = "*"
+flask-migrate = "*"
+flask-sslify = "*"
 
 [requires]
 python_version = "3.8"

@@ -34,7 +34,7 @@ class BaseConfig(object):
     MAIL_DEFAULT_SENDER = ('Spring Fly', MAIL_USERNAME)
 
     # 博客頁面的配置變量
-    BLOG_EMAIL = os.getenv('BLOG EMAIL')
+    BLOG_EMAIL = os.getenv('BLOG_EMAIL')
     BLOG_POST_PER_PAGE = 8
     BLOG_MANAGE_POST_PER_PAGE = 18
     BLOG_COMMENT_PER_PAGE = 12

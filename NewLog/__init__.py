@@ -4,9 +4,11 @@
     @URL: https://spring-fly.com
     @Create: 2020/9/9 22:23
 """
+import logging
 import os
+from logging.handlers import RotatingFileHandler, SMTPHandler
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_wtf.csrf import CSRFError
 from flask_login import current_user
 from datetime import datetime
@@ -17,7 +19,7 @@ from NewLog.blueprints.auth import auth_bp
 from NewLog.blueprints.blog import blog_bp
 from NewLog.config import config
 # flask擴展包，單獨放在extensions.py中
-from NewLog.extensions import bootstrap, db, pagedown, mail, moment, login_manager, csrf
+from NewLog.extensions import bootstrap, db, pagedown, mail, moment, login_manager, csrf, migrate, sslify
 # 創建base.html上下文
 from NewLog.models import Admin, Post, Comment, Category, Link
 
@@ -39,12 +41,43 @@ def create_app(config_name=None):
     register_template_context(app)
     register_errors(app)
     register_commands(app)
+    register_logging(app)
     return app
 
 
-# 定義註冊函數
+# 部署上線
 def register_logging(app):
-    pass  # 部署上線
+    # Mail send error log
+    class RequestFormatter(logging.Formatter):
+        def format(self, record):
+            record.url = request.url
+            record.remote_addr = request.remote_addr
+            return super(RequestFormatter, self).format(record)
+
+    request_formatter = RequestFormatter(
+        '[%(asctime)s] %(remote_addr)s requested %(url)s\n'
+        '%(levelname)s in %(module)s: %(message)s'
+    )
+
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    file_handler = RotatingFileHandler(os.path.join(basedir, 'logs/NewLog.log'),
+                                       maxBytes=1024 * 1024 * 15, backupCount=10)
+    file_handler.setFormatter(formatter)
+    file_handler.setLevel(logging.INFO)
+
+    mail_handler = SMTPHandler(
+        mailhost=app.config['MAIL_SERVER'],
+        fromaddr=app.config['MAIL_USERNAME'],
+        toaddrs=app.config['BLOG_MAIL'],
+        subject='Spring Fly occur Error',
+        credentials=(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD']))
+    mail_handler.setLevel(logging.ERROR)
+    mail_handler.setFormatter(request_formatter)
+
+    if not app.debug:
+        app.logger.addHandler(mail_handler)
+        app.logger.addHandler(file_handler)
 
 
 # 注册后才能使用！！
@@ -56,6 +89,8 @@ def register_extensions(app):
     moment.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
+    migrate.init_app(app, db)
+    sslify.init_app(app)
 
 
 def register_blueprints(app):
