@@ -66,6 +66,7 @@ class Post(db.Model):
     body = db.Column(db.Text(100000))
     body_html = db.Column(db.Text(100000))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+    last_timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Post and Category
     category_name = db.Column(db.String(30), db.ForeignKey('category.name'))
