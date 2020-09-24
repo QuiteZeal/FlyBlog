@@ -11,10 +11,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_pagedown import PageDown
 from flask_mail import Mail
 from flask_moment import Moment
-# Flask-login
 from flask_login import LoginManager
 from flask_wtf import CSRFProtect
 from flask_migrate import Migrate
+# from flask_sslify import SSLify
 
 # 先不傳入參數
 bootstrap = Bootstrap()
@@ -23,10 +23,10 @@ db = SQLAlchemy()
 pagedown = PageDown()
 mail = Mail()
 moment = Moment()
-# Flask-login
 login_manager = LoginManager()
 csrf = CSRFProtect()
 migrate = Migrate()
+# sslify = SSLify()
 
 
 @login_manager.user_loader
