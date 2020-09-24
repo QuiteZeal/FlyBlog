@@ -14,8 +14,8 @@
             <a href="#postComment" class="badge badge-success my-auto mr-1">
                 Comments: {{ post.comments|length }}</a>
             <a href="javascript:" class="badge badge-dark my-auto mr-1">
-                {{ moment(post.timestamp).format('ll') }}</a>
-            <a href="#" class="badge badge-warning my-auto ml-auto" data-toggle="modal" data-target="#permalinkModal">
+                {{ moment(post.last_timestamp).format('lll') }}</a>
+            <a href="#" class="d-none d-sm-block badge badge-warning my-auto ml-auto" data-toggle="modal" data-target="#permalinkModal">
                 Share</a>
             <div id="permalinkModal" class="modal">
                 <div class="modal-dialog" role="document">

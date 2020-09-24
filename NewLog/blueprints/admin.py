@@ -6,6 +6,7 @@
 """
 from flask import Blueprint, render_template, redirect, url_for, request, current_app, flash
 from flask_login import login_required, current_user
+from datetime import datetime
 
 from NewLog.forms import SettingForm, PostForm, CategoryForm, LinkForm
 from NewLog.utils import redirect_back
@@ -74,6 +75,7 @@ def edit_post(post_id):
         post.title = form.title.data
         post.body = form.body.data
         post.category = Category.query.get(form.category.data)
+        post.last_timestamp = datetime.utcnow()
 
         db.session.commit()
         flash('Post updated.', 'success')
