@@ -6,26 +6,22 @@
 """
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
-# from flask_ckeditor import CKEditor
 from flask_pagedown import PageDown
 from flask_mail import Mail
 from flask_moment import Moment
 from flask_login import LoginManager
 from flask_wtf import CSRFProtect
 from flask_migrate import Migrate
-# from flask_sslify import SSLify
 
 # in __init__.py to init and add parameter
 bootstrap = Bootstrap()
 db = SQLAlchemy()
-# ckeditor = CKEditor()
 pagedown = PageDown()
 mail = Mail()
 moment = Moment()
 login_manager = LoginManager()
 csrf = CSRFProtect()
 migrate = Migrate()
-# sslify = SSLify()
 
 
 @login_manager.user_loader
