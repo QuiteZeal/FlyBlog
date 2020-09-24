@@ -65,8 +65,8 @@ class Category(db.Model):
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60))
-    body = db.Column(db.Text(10000000))
-    body_html = db.Column(db.Text(10000000))
+    body = db.Column(db.Text(100000))
+    body_html = db.Column(db.Text(100000))
     # length = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
