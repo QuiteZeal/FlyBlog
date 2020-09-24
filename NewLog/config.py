@@ -10,7 +10,7 @@ import sys
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 # SQLite URI compatible
-# 使用SQLite內存型數據庫，測試用
+# For Test: SQLite Memory
 WIN = sys.platform.startswith('win')
 if WIN:
     prefix = 'sqlite:///'
@@ -18,13 +18,12 @@ else:
     prefix = 'sqlite:////'
 
 
-# 以下為基本配置
 class BaseConfig(object):
-    # 需要在部署前隨即生成
-    SECRET_KEY = os.getenv('SECRET_KEY', 'dev key')
+    # use uuid4
+    SECRET_KEY = os.getenv('SECRET_KEY', 'spring fly')
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = prefix + os.path.join(basedir, 'data.db')
+    SQLALCHEMY_DATABASE_URI = prefix + os.path.join(basedir, 'data.db')  # will change at different environment
 
     MAIL_SERVER = os.getenv('MAIL_SERVER')
     MAIL_PORT = 465
@@ -33,7 +32,7 @@ class BaseConfig(object):
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = ('Spring Fly', MAIL_USERNAME)
 
-    # 博客頁面的配置變量
+    # Blog Basic Info
     BLOG_EMAIL = os.getenv('BLOG_EMAIL')
     BLOG_POST_PER_PAGE = 8
     BLOG_MANAGE_POST_PER_PAGE = 18
@@ -43,8 +42,8 @@ class BaseConfig(object):
     BLOG_THEMES = {'sketchy': 'sketchy', 'minty': 'minty', 'flatly': 'flatly', 'darkly': 'darkly'}
 
 
-# 根據BaseConfig擴展
-# 開發、測試、發布時選用不同的數據庫配置
+# Inherit BaseConfig
+# use config to choose
 class DevelopmentConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = prefix + os.path.join(basedir, 'data-dev.db')
 
@@ -59,6 +58,7 @@ class ProductionConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', prefix + os.path.join(basedir, 'data.db'))
 
 
+# will use app.config.from_object() in __init__.py
 config = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,

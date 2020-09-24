@@ -4,7 +4,6 @@
     @URL: https://spring-fly.com
     @Create: 2020/9/10 16:31
 """
-# 導入flask擴展包的內容單獨寫在extensions.py
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 # from flask_ckeditor import CKEditor
@@ -16,7 +15,7 @@ from flask_wtf import CSRFProtect
 from flask_migrate import Migrate
 # from flask_sslify import SSLify
 
-# 先不傳入參數
+# in __init__.py to init and add parameter
 bootstrap = Bootstrap()
 db = SQLAlchemy()
 # ckeditor = CKEditor()

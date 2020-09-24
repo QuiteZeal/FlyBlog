@@ -4,13 +4,12 @@
     @URL: https://spring-fly.com
     @Create: 2020/9/12 18:14
 """
-# 需要使用隨機數
 import random
 
 from NewLog import db
 from NewLog.models import Admin, Category, Comment, Post, Link
 
-# 避免分類名稱發生重覆錯誤
+# avoid same name
 from sqlalchemy.exc import IntegrityError
 from faker import Faker
 
@@ -18,7 +17,7 @@ from faker import Faker
 fake = Faker()
 
 
-# 不需要Faker，可自定義
+# dont use fake
 def fake_admin():
     admin = Admin(
         username='fly',
@@ -70,7 +69,7 @@ def fake_comments(count=200):
         )
         db.session.add(comment)
 
-    # 鹽的設置自定義
+    # set salt
     salt = int(count * 0.2)
     for i in range(salt):
         # random generate unreviewed comments
@@ -100,7 +99,6 @@ def fake_comments(count=200):
     db.session.commit()
 
     # generate replies
-    # 對於評論的回復
     for i in range(salt):
         comment = Comment(
             author=fake.name(),

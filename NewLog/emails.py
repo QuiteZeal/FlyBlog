@@ -18,7 +18,7 @@ def _send_async_mail(app, message):
 
 
 def send_mail(subject, to, html):
-    # 使用_get_current_object()獲得被代理的程序實例
+    # use _get_current_object() to get real current app
     app = current_app._get_current_object()
     message = Message(subject, recipients=[to], html=html)
     thr = Thread(target=_send_async_mail, args=[app, message])

@@ -11,7 +11,7 @@ from wtforms.validators import DataRequired, Length, Email, URL, Optional
 # from flask_ckeditor import CKEditorField
 from flask_pagedown.fields import PageDownField
 
-# 需要對Category添加自定義驗證器
+# Custom validator for category
 from NewLog.models import Category
 
 
@@ -36,7 +36,7 @@ class PostForm(FlaskForm):
     body = PageDownField('Body', validators=[DataRequired()])
     submit = SubmitField()
 
-    # category下拉列表，使用構造方法執行
+    # for <option>
     def __init__(self, *args, **kwargs):
         super(PostForm, self).__init__(*args, **kwargs)
         self.category.choices = [(category.id, category.name)
@@ -60,7 +60,7 @@ class CommentForm(FlaskForm):
     submit = SubmitField()
 
 
-# 管理員的評論從CommentForm繼承，同時，不需要的字段進行隱藏
+# Inherit CommentFrom and add hidden info
 class AdminCommentForm(CommentForm):
     author = HiddenField()
     email = HiddenField()

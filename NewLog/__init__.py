@@ -18,19 +18,19 @@ from NewLog.blueprints.admin import admin_bp
 from NewLog.blueprints.auth import auth_bp
 from NewLog.blueprints.blog import blog_bp
 from NewLog.config import config
-# flask擴展包，單獨放在extensions.py中
+# Use extensions.py to manage flask packages.
 from NewLog.extensions import bootstrap, db, pagedown, mail, moment, login_manager, csrf, migrate
-# 創建base.html上下文
+# context for base.html
 from NewLog.models import Admin, Post, Comment, Category, Link
 
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 
-# 組織工廠函數：create_app()
+# factory function：create_app()
 def create_app(config_name=None):
     if config_name is None:
-        # 不直接用：app.config.from_pyfile('config.py')
-        # 而是可以選擇配置：開發、測試、發布
+        # Do Not：app.config.from_pyfile('config.py')
+        # Use FLASK_CONFIG in .env to choose.
         config_name = os.getenv('FLASK_CONFIG', 'development')
 
     app = Flask('NewLog')
@@ -47,7 +47,7 @@ def create_app(config_name=None):
     return app
 
 
-# 部署上線
+# deploy
 def register_logging(app):
     # Mail send error log
     class RequestFormatter(logging.Formatter):
@@ -82,7 +82,7 @@ def register_logging(app):
         app.logger.addHandler(file_handler)
 
 
-# 注册后才能使用！！
+# Important!
 def register_extensions(app):
     bootstrap.init_app(app)
     db.init_app(app)
@@ -102,13 +102,13 @@ def register_blueprints(app):
 
 
 def register_shell_context(app):
-    # 配置Python Shell上下文
+    # For Python Shell context
     @app.shell_context_processor
     def make_shell_context():
         return dict(db=db, Admin=Admin, Post=Post, Category=Category, Comment=Comment)
 
 
-# 處理模板上下文，重要！
+# For html template context
 def register_template_context(app):
     @app.context_processor
     def make_template_context():
@@ -154,8 +154,7 @@ def register_errors(app):
 
 def register_commands(app):
     # command: flask initial --drop
-    # cannot use: init_db, than is wrong
-    # 可手動刪除數據表後重建
+    # cannot use: init_db, include _ is wrong
     @app.cli.command()
     @click.option('--drop', is_flag=True, help='Create after drop')
     def initial(drop):
