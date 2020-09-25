@@ -6,12 +6,12 @@
 """
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
-from flask_pagedown import PageDown
 from flask_mail import Mail
 from flask_moment import Moment
 from flask_login import LoginManager
 from flask_wtf import CSRFProtect
 from flask_migrate import Migrate
+from Pagedown import PageDown
 
 # in __init__.py to init and add parameter
 bootstrap = Bootstrap()

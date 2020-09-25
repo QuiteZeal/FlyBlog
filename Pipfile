@@ -23,7 +23,6 @@ markdown = "*"
 bleach = "*"
 pygments = "*"
 flask-migrate = "*"
-flask-sslify = "*"
 gunicorn = "*"
 
 [requires]

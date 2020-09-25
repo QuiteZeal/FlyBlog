@@ -30,7 +30,6 @@ def settings():
         current_user.blog_title = form.blog_title.data
         current_user.blog_sub_title = form.blog_sub_title.data
         current_user.body = form.body.data
-
         db.session.commit()
         flash('Setting updated.', 'success')
         return redirect(url_for('blog.index'))
@@ -47,7 +46,6 @@ def manage_post():
     pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
         page, per_page=current_app.config['BLOG_MANAGE_POST_PER_PAGE'])
     posts = pagination.items
-
     return render_template('admin/manage_post.html', page=page, pagination=pagination, posts=posts)
 
 
@@ -59,7 +57,6 @@ def new_post():
         body = form.body.data
         category = Category.query.get(form.category.data)
         post = Post(title=title, body=body, category=category)
-
         db.session.add(post)
         db.session.commit()
         flash('Post published.', 'success')
@@ -76,7 +73,6 @@ def edit_post(post_id):
         post.body = form.body.data
         post.category = Category.query.get(form.category.data)
         post.last_timestamp = datetime.utcnow()
-
         db.session.commit()
         flash('Post updated.', 'success')
         return redirect(url_for('blog.show_post', post_id=post.id))
@@ -119,7 +115,6 @@ def manage_comment():
         filtered_comments = Comment.query.filter_by(from_admin=True)
     else:
         filtered_comments = Comment.query
-
     pagination = filtered_comments.order_by(Comment.timestamp.desc()).paginate(page, per_page=per_page)
     comments = pagination.items
     return render_template('admin/manage_comment.html', comments=comments, pagination=pagination)
@@ -152,6 +147,13 @@ def manage_category():
 @admin_bp.route('/category/new', methods=['GET', 'POST'])
 def new_category():
     form = CategoryForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        category = Category(name=name)
+        db.session.add(category)
+        db.session.commit()
+        flash('Category: {} created.'.format(name), 'success')
+        return redirect(url_for('.manage_category'))
     return render_template('admin/new_category.html', form=form)
 
 
