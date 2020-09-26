@@ -96,6 +96,8 @@ def show_post(post_id):
             flash('Thanks, your comment will be published after reviewed.', 'info')
             send_new_comment_email(post)  # to admin
         return redirect(url_for('.show_post', post_id=post_id))
+    if request.method == 'POST' and not form.validate():
+        flash('Maybe some information wrong, please check and try again.', 'warning')
     return render_template('blog/post.html', post=post, pagination=pagination, form=form, comments=comments)
 
 

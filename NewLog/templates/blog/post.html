@@ -15,7 +15,8 @@
                 Comments: {{ post.comments|length }}</a>
             <a href="javascript:" class="badge badge-dark my-auto mr-1">
                 {{ moment(post.last_timestamp).format('lll') }}</a>
-            <a href="#" class="d-none d-sm-block badge badge-warning my-auto ml-auto" data-toggle="modal" data-target="#permalinkModal">
+            <a href="#" class="d-none d-sm-block badge badge-warning my-auto ml-auto" data-toggle="modal"
+               data-target="#permalinkModal">
                 Share</a>
             <div id="permalinkModal" class="modal">
                 <div class="modal-dialog" role="document">
@@ -55,11 +56,20 @@
             {% endif %}
         </div>
         <div id="postComment">
-            <h3>{{ comments|length }} Comments
+            <h3 class="d-flex">{{ comments|length }} Comments
                 <small>
                     <a href="{{ url_for('.show_post', post_id=post.id, page=pagination.pages or 1) }}#postComment"
-                       class="badge badge-light my-auto mr-1">Latest</a>
+                       class="badge badge-light my-auto">Latest</a>
                 </small>
+                {% if current_user.is_authenticated %}
+                    <form method="post" class="my-auto ml-auto"
+                          action="{{ url_for('admin.set_comment', post_id=post.id, next=request.full_path) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-sm btn-warning">
+                            {% if post.can_comment %}Disable{% else %}Enable{% endif %}
+                        </button>
+                    </form>
+                {% endif %}
             </h3>
             {% if comments %}
                 <ul class="list-group">
@@ -94,9 +104,17 @@
                                     <br>{{ comment.replied.body }}
                                 </p>
                             {% endif %}
-                            <div class="d-flex flex-row-reverse">
-                                <a class="btn btn-outline-primary btn-sm"
+                            <div class="d-flex">
+                                <a href="mailto:{{ comment.email }}" class="ml-auto mr-1 btn btn-outline-info btn-sm">Email</a>
+                                <a class="mr-1 btn btn-outline-primary btn-sm"
                                    href="{{ url_for('.reply_comment', comment_id=comment.id) }}">Reply</a>
+                                <form method="post"
+                                      action="{{ url_for('admin.delete_comment', comment_id=comment.id, next=request.full_path) }}">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm"
+                                            onclick="return confirm('Are you serious?');">Delete
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     {% endfor %}
@@ -107,13 +125,28 @@
                 </div>
             {% endif %}
         </div>
-        <div class="mt-3">
-            {% if comments %}
+        {% if comments %}
+            <div class="mt-3">
                 {{ render_pagination(pagination, fragment='#postComment') }}
-            {% endif %}
-        </div>
-        <div id="commentForm">
-            {{ render_form(form, action=request.full_path) }}
-        </div>
+            </div>
+        {% endif %}
+        {% if request.args.get('reply') %}
+            <div class="alert alert-secondary">
+                Reply to <strong>{{ request.args.get('author') }}</strong> :
+                <a class="float-right" href="{{ url_for('.show_post', post_id=post.id) }}">Cancel</a>
+            </div>
+        {% endif %}
+        {% if post.can_comment %}
+            <div id="commentForm">
+                {{ render_form(form, action=request.full_path) }}
+            </div>
+        {% else %}
+            <div id="commentForm">
+                <div class="jumbotron text-center">
+                    <h5 class="text-muted my-auto">Only Read. No Discuss.</h5>
+                </div>
+            </div>
+        {% endif %}
+
     </div>
 {% endblock %}

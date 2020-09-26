@@ -45,7 +45,7 @@
                     </th>
                     <th>{{ post.body_html|striptags|count }}</th>
                     <th>
-                        <a href="{{ url_for('.edit_post', post_id=post.id) }}" class="mr-2 btn btn-sm btn-info">Edit</a>
+                        <a href="{{ url_for('.edit_post', post_id=post.id) }}" class="mr-1 btn btn-sm btn-info">Edit</a>
                         <form method="post" class="d-inline"
                               action="{{ url_for('.delete_post', post_id=post.id, next=request.full_path) }}">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

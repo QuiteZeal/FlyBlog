@@ -45,17 +45,17 @@ class PostForm(FlaskForm):
 
 class CategoryForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(1, 30)])
-    submit = SubmitField
+    submit = SubmitField()
 
     def validate_name(self, field):
         if Category.query.filter_by(name=field.data).first():
-            raise ValidationError('This category already exists.')
+            raise ValidationError('{} already exists.'.format(field.data))
 
 
 class CommentForm(FlaskForm):
     author = StringField('Name', validators=[DataRequired(), Length(1, 30)])
     email = StringField('Email', validators=[DataRequired(), Email(), Length(1, 255)])
-    site = StringField('Site', validators=[Optional(), URL(), Length(0, 255)])
+    site = StringField('Site', validators=[Optional(), URL(message='need prefix like https://'), Length(0, 255)])
     body = TextAreaField('Comment', validators=[DataRequired()])
     submit = SubmitField()
 
@@ -69,5 +69,5 @@ class AdminCommentForm(CommentForm):
 
 class LinkForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(1, 30)])
-    url = StringField('URL', validators=[DataRequired(), URL(), Length(1, 255)])
+    url = StringField('URL', validators=[DataRequired(), URL(message='need prefix like https://'), Length(1, 255)])
     submit = SubmitField()

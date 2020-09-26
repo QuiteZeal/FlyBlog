@@ -1,70 +1,11 @@
 {% extends 'base.html' %}
-{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/form.html' import render_form %}
 
-{% block title %}Manage Categories{% endblock %}
+{% block title %}New Category{% endblock %}
 
 {% block content %}
-    <div class="d-flex pt-3 pb-2">
-        <h1 class="mr-auto">
-            Posts <small class="text-muted">{{ pagination.total }}</small>
-        </h1>
-        <span class="my-auto"><a href="{{ url_for('.new_post') }}" class="btn btn-outline-primary">New Post</a></span>
+    <div class="pt-3 pb-2">
+        <h1>New Category</h1>
     </div>
-    {% if posts %}
-        <table class="table table-hover table-striped">
-            <thead>
-            <tr>
-                <th>No.</th>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Date</th>
-                <th>Comments</th>
-                <th>Count</th>
-                <th>Operate</th>
-            </tr>
-            </thead>
-            {% for post in posts %}
-                <tr>
-                    <th>{{ loop.index + ((page - 1) * config.BLOG_MANAGE_POST_PER_PAGE) }}</th>
-                    <th>
-                        <a href="{{ url_for('blog.show_post', post_id=post.id) }}">{{ post.title }}</a>
-                    </th>
-                    <th>
-                        <a href="{{ url_for('blog.show_category', category_name=post.category.name) }}">{{ post.category.name }}</a>
-                    </th>
-                    <th>{{ moment(post.timestamp).format('ll') }}</th>
-                    <th>
-                        <form method="post" class="d-inline mr-2"
-                              action="{{ url_for('.set_comment', post_id=post.id, next=request.full_path) }}">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                            <button type="submit" class="btn btn-sm btn-warning">
-                                {% if post.can_comment %}Disable{% else %}Enable{% endif %}
-                            </button>
-                        </form>
-                        <a href="{{ url_for('blog.show_post', post_id=post.id) }}#postComment">{{ post.comments|length }}</a>
-                    </th>
-                    <th>{{ post.body_html|striptags|count }}</th>
-                    <th>
-                        <a href="{{ url_for('.edit_post', post_id=post.id) }}" class="mr-2 btn btn-sm btn-info">Edit</a>
-                        <form method="post" class="d-inline"
-                              action="{{ url_for('.delete_post', post_id=post.id, next=request.full_path) }}">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                            <button type="submit" class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Are you serious?');">Delete
-                            </button>
-                        </form>
-                    </th>
-                </tr>
-            {% endfor %}
-        </table>
-        <div class="mt-5">{{ render_pagination(pagination) }}</div>
-    {% else %}
-        <div class="mt-5 alert alert-dismissible alert-info">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <h4 class="alert-heading">Hey!</h4>
-            <p class="mb-0">Hey! Nothing here, hurry up to write one.
-                <a href="{{ url_for('admin.new_post') }}" class="alert-link">Click here to write.</a>.</p>
-        </div>
-    {% endif %}
-
+    {{ render_form(form) }}
 {% endblock %}
