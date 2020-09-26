@@ -3,8 +3,8 @@
 {% block title %}About{% endblock %}
 
 {% block content %}
-    <div class="jumbotron my-4">
-        <h1 class="display-3">About Me.</h1>
+    <div class="about-box">
+        <h1 class="display-4">About Me.</h1>
         <p class="lead">
             {% if admin.body_html %}
                 {{ admin.body_html|safe }}
@@ -14,7 +14,7 @@
         </p>
         <hr class="my-4">
         <p class="lead">
-            <a class="btn btn-primary btn-lg" href="#" role="button">Know more</a>
+            <a class="btn btn-primary btn" href="#" role="button">Know more</a>
         </p>
     </div>
 {% endblock %}
