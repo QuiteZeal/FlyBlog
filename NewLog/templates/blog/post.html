@@ -105,16 +105,18 @@
                                 </p>
                             {% endif %}
                             <div class="d-flex">
-                                <a href="mailto:{{ comment.email }}" class="ml-auto mr-1 btn btn-outline-info btn-sm">Email</a>
-                                <a class="mr-1 btn btn-outline-primary btn-sm"
+                                <a class="ml-auto mr-1 btn btn-outline-primary btn-sm"
                                    href="{{ url_for('.reply_comment', comment_id=comment.id) }}">Reply</a>
-                                <form method="post"
-                                      action="{{ url_for('admin.delete_comment', comment_id=comment.id, next=request.full_path) }}">
-                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm"
-                                            onclick="return confirm('Are you serious?');">Delete
-                                    </button>
-                                </form>
+                                {% if current_user.is_authenticated %}
+                                    <a href="mailto:{{ comment.email }}" class="mr-1 btn btn-outline-info btn-sm">Email</a>
+                                    <form method="post"
+                                          action="{{ url_for('admin.delete_comment', comment_id=comment.id, next=request.full_path) }}">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                onclick="return confirm('Are you serious?');">Delete
+                                        </button>
+                                    </form>
+                                {% endif %}
                             </div>
                         </div>
                     {% endfor %}
