@@ -91,6 +91,19 @@ def delete_post(post_id):
     return redirect_back()
 
 
+@admin_bp.route('/post/<int:post_id>/hide', methods=['POST'])
+def hide_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.private:
+        post.private = False
+        flash('Post is shown.', 'success')
+    else:
+        post.private = True
+        flash('Post is hidden.', 'success')
+    db.session.commit()
+    return redirect_back()
+
+
 @admin_bp.route('/post/<int:post_id>/set-comment', methods=['POST'])
 def set_comment(post_id):
     post = Post.query.get_or_404(post_id)
@@ -120,7 +133,6 @@ def manage_comment():
     return render_template('admin/manage_comment.html', comments=comments, pagination=pagination)
 
 
-# 評論審核通過
 @admin_bp.route('/comment/<int:comment_id>/approve', methods=['POST'])
 def approve_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)

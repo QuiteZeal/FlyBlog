@@ -12,6 +12,7 @@ from flask_login import LoginManager
 from flask_wtf import CSRFProtect
 from flask_migrate import Migrate
 from Pagedown import PageDown
+from flask_debugtoolbar import DebugToolbarExtension
 
 # in __init__.py to init and add parameter
 bootstrap = Bootstrap()
@@ -22,6 +23,7 @@ moment = Moment()
 login_manager = LoginManager()
 csrf = CSRFProtect()
 migrate = Migrate()
+toolbar = DebugToolbarExtension()
 
 
 @login_manager.user_loader

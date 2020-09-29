@@ -19,7 +19,7 @@ from NewLog.blueprints.auth import auth_bp
 from NewLog.blueprints.blog import blog_bp
 from NewLog.config import config
 # Use extensions.py to manage flask packages.
-from NewLog.extensions import bootstrap, db, pagedown, mail, moment, login_manager, csrf, migrate
+from NewLog.extensions import bootstrap, db, pagedown, mail, moment, login_manager, csrf, migrate, toolbar
 # context for base.html
 from NewLog.models import Admin, Post, Comment, Category, Link
 
@@ -35,6 +35,7 @@ def create_app(config_name=None):
 
     app = Flask('NewLog')
     app.config.from_object(config[config_name])
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
     register_logging(app)
     register_extensions(app)
@@ -92,6 +93,7 @@ def register_extensions(app):
     login_manager.init_app(app)
     csrf.init_app(app)
     migrate.init_app(app, db)
+    toolbar.init_app(app)
 
 
 def register_blueprints(app):
@@ -135,11 +137,11 @@ def register_errors(app):
         return render_template('400.html', description=e.description), 400
 
     @app.errorhandler(401)
-    def bad_request(e):
+    def unauthorized(e):
         return render_template('errors/401.html'), 401
 
     @app.errorhandler(403)
-    def bad_request(e):
+    def forbidden(e):
         return render_template('errors/403.html'), 403
 
     @app.errorhandler(404)

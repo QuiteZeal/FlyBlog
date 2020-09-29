@@ -120,6 +120,3 @@ def fake_links():
     quitezeal = Link(name='QuiteZeal', url='https://quitezeal.com')
     db.session.add_all([springfly, ahaknow, quitezeal])
     db.session.commit()
-
-
-

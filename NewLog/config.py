@@ -23,7 +23,8 @@ class BaseConfig(object):
     SECRET_KEY = os.getenv('SECRET_KEY', 'spring fly')
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = prefix + os.path.join(basedir, 'data.db')  # will change at different environment
+    # will change at different environment
+    SQLALCHEMY_DATABASE_URI = prefix + os.path.join(basedir, 'data.db')  
 
     MAIL_SERVER = os.getenv('MAIL_SERVER')
     MAIL_PORT = 465

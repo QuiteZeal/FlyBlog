@@ -9,7 +9,7 @@ from urllib.parse import urlparse, urljoin
 from flask import request, redirect, url_for
 
 # markdown
-from bleach import clean, linkify
+from bleach import clean
 from markdown import markdown
 
 
@@ -49,4 +49,3 @@ def on_changed_body(target, value, oldvalue, initiator):
     html = markdown(value, output_format='html', extensions=['tables', 'fenced_code', 'codehilite', 'nl2br'])
     clean_html = clean(html, tags=allowed_tags, attributes=allowed_attributes)
     target.body_html = clean_html
-

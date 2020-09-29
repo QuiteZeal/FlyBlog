@@ -45,6 +45,13 @@
                     </th>
                     <th>{{ post.body_html|striptags|count }}</th>
                     <th>
+                        <form method="post" class="d-inline mr-1"
+                              action="{{ url_for('.hide_post', post_id=post.id, next=request.full_path) }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-sm btn-success">
+                                {% if post.private %}Show{% else %}Hide{% endif %}
+                            </button>
+                        </form>
                         <a href="{{ url_for('.edit_post', post_id=post.id) }}" class="mr-1 btn btn-sm btn-info">Edit</a>
                         <form method="post" class="d-inline"
                               action="{{ url_for('.delete_post', post_id=post.id, next=request.full_path) }}">

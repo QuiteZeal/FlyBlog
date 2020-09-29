@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 faker = "*"
+flake8 = "*"
 
 [packages]
 flask = "*"
@@ -24,6 +25,7 @@ bleach = "*"
 pygments = "*"
 flask-migrate = "*"
 gunicorn = "*"
+flask-debugtoolbar = "*"
 
 [requires]
 python_version = "3.8"

@@ -4,7 +4,7 @@
     @URL: https://spring-fly.com
     @Create: 2020/9/9 21:07
 """
-from flask import Blueprint, render_template,redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash
 # Login and logout
 from flask_login import login_user, login_required, logout_user, current_user
 
