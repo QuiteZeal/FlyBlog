@@ -22,7 +22,10 @@ class BaseConfig(object):
     # use uuid4
     SECRET_KEY = os.getenv('SECRET_KEY', 'spring fly')
 
+    DEBUG_TB_INTERCEPT_REDIRECTS = False  # debug-tool
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_RECORD_QUERIES = True
     # will change at different environment
     SQLALCHEMY_DATABASE_URI = prefix + os.path.join(basedir, 'data.db')  
 
@@ -41,6 +44,8 @@ class BaseConfig(object):
     BLOG_MANAGE_COMMENT_PER_PAGE = 20
     # ('theme name', 'display name')
     BLOG_THEMES = {'sketchy': 'sketchy', 'minty': 'minty', 'flatly': 'flatly', 'darkly': 'darkly'}
+    # Slow query 1s
+    BLOG_SLOW_QUERY_THRESHOLD = 1
 
 
 # Inherit BaseConfig
