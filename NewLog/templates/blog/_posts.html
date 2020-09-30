@@ -10,9 +10,9 @@
             </div>
             <article class="article-preview">
                 {% if post.body_html %}
-                    {{ post.body_html|truncate(155, False, '...', 0)|safe }}
+                    {{ post.body_html|safe|truncate(155, False, '...', 0) }}
                 {% else %}
-                    {{ post.body|truncate(155, False, '...', 0)|safe }}
+                    {{ post.body|safe|truncate(155, False, '...', 0) }}
                 {% endif %}
             </article>
             <div class="d-flex">
