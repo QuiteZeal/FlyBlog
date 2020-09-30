@@ -27,7 +27,7 @@
                 <tr>
                     <th>{{ loop.index + ((page - 1) * config.BLOG_MANAGE_POST_PER_PAGE) }}</th>
                     <th>
-                        <a href="{{ url_for('blog.show_post', post_slug=post.slug) }}">{{ post.title }}</a>
+                        <a href="{{ url_for('blog.show_post', post_id=post.id) }}">{{ post.title }}</a>
                     </th>
                     <th>
                         <a href="{{ url_for('blog.show_category', category_name=post.category.name) }}">{{ post.category.name }}</a>
@@ -41,7 +41,7 @@
                                 {% if post.can_comment %}Disable{% else %}Enable{% endif %}
                             </button>
                         </form>
-                        <a href="{{ url_for('blog.show_post', post_slug=post.slug) }}#postComment">{{ post.comments|length }}</a>
+                        <a href="{{ url_for('blog.show_post', post_id=post.id) }}#postComment">{{ post.comments|length }}</a>
                     </th>
                     <th>{{ post.body_html|striptags|count }}</th>
                     <th>

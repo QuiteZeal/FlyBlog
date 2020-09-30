@@ -64,7 +64,7 @@ def new_post():
         db.session.add(post)
         db.session.commit()
         flash('Post published.', 'success')
-        return redirect(url_for('blog.show_post', post_slug=post.slug))
+        return redirect(url_for('blog.show_post', post_id=post.id))
     return render_template('admin/new_post.html', form=form)
 
 
@@ -83,7 +83,7 @@ def edit_post(post_id):
         post.last_timestamp = datetime.utcnow()
         db.session.commit()
         flash('Post updated.', 'success')
-        return redirect(url_for('blog.show_post', post_slug=post.slug))
+        return redirect(url_for('blog.show_post', post_id=post.id))
     form.title.data = post.title
     form.body.data = post.body
     form.category.data = post.category_name

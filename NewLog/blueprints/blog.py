@@ -56,9 +56,9 @@ def show_category(category_name):
     return render_template('blog/category.html', category=category, pagination=pagination, posts=posts)
 
 
-@blog_bp.route('/post/<post_slug>', methods=['GET', 'POST'])
-def show_post(post_slug):
-    post = Post.query.filter_by(slug=post_slug).first_or_404()
+@blog_bp.route('/post/<int:post_id>', methods=['GET', 'POST'])
+def show_post(post_id):
+    post = Post.query.get_or_404(post_id)
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['BLOG_COMMENT_PER_PAGE']
     # desc() = descending, asc() = ascending
@@ -98,7 +98,7 @@ def show_post(post_slug):
         else:
             flash('Thanks, your comment will be published after reviewed.', 'info')
             send_new_comment_email(post)  # to admin
-        return redirect(url_for('.show_post', post_slug=post.slug))
+        return redirect(url_for('.show_post', post_id=post_id))
     if request.method == 'POST' and not form.validate():
         flash('Maybe some information wrong, please check and try again.', 'warning')
     return render_template('blog/post.html', post=post, pagination=pagination, form=form, comments=comments)
@@ -109,9 +109,9 @@ def reply_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     if not comment.post.can_comment:
         flash('Only Read, No Discuss.', 'warning')
-        return redirect(url_for('.show_post', post_slug=comment.post.slug))
+        return redirect(url_for('.show_post', post_id=comment.post.id))
     return redirect(
-        url_for('.show_post', post_slug=comment.post.slug, reply=comment_id, author=comment.author) + '#commentForm')
+        url_for('.show_post', post_id=comment.post_id, reply=comment_id, author=comment.author) + '#commentForm')
 
 
 @blog_bp.route('/change-theme/<theme_name>')
