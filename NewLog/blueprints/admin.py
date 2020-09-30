@@ -9,7 +9,7 @@ from flask_login import login_required, current_user
 from datetime import datetime
 
 from NewLog.forms import SettingForm, PostForm, CategoryForm, LinkForm
-from NewLog.utils import redirect_back
+from NewLog.utils import redirect_back, slugify
 from NewLog.extensions import db
 from NewLog.models import Post, Category, Comment, Link
 
@@ -54,9 +54,10 @@ def new_post():
     form = PostForm()
     if form.validate_on_submit():
         title = form.title.data
+        slug = slugify(title)
         body = form.body.data
         category = Category.query.get(form.category.data)
-        post = Post(title=title, body=body, category=category)
+        post = Post(title=title, body=body, slug=slug, category=category)
         db.session.add(post)
         db.session.commit()
         flash('Post published.', 'success')
@@ -70,6 +71,7 @@ def edit_post(post_id):
     post = Post.query.get_or_404(post_id)
     if form.validate_on_submit():
         post.title = form.title.data
+        post.slug = slugify(form.title.data)
         post.body = form.body.data
         post.category = Category.query.get(form.category.data)
         post.last_timestamp = datetime.utcnow()

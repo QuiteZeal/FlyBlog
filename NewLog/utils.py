@@ -5,9 +5,10 @@
     @Create: 2020/9/12 16:42
 """
 from urllib.parse import urlparse, urljoin
-
 from flask import request, redirect, url_for
-
+# post title slug
+import re
+from unidecode import unidecode
 # markdown
 from bleach import clean
 from markdown import markdown
@@ -50,3 +51,13 @@ def on_changed_body(target, value, oldvalue, initiator):
                     extensions=['tables', 'fenced_code', 'codehilite', 'nl2br', 'md_in_html'])
     clean_html = clean(html, tags=allowed_tags, attributes=allowed_attributes)
     target.body_html = clean_html
+
+
+_punct_re = re.compile(r'[\t !@#$%^&*()_=\-\[\]{}\\|\'",.]+')
+
+
+def slugify(text, delim=u'-'):
+    result = []
+    for word in _punct_re.split(text.lower()):
+        result.extend(unidecode(word).lower().split())
+    return unidecode(delim.join(result))
