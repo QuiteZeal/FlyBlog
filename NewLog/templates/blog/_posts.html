@@ -3,7 +3,7 @@
         <div class="container-md my-4">
             <div class="d-flex mb-3 border-bottom">
                 <h2 class="fs-2 text-primary my-auto">
-                    <a href="{{ url_for('.show_post', slug=post.slug) }}">{{ post.title }}</a>
+                    <a href="{{ url_for('.show_post', post_id=post.id) }}">{{ post.title }}</a>
                 </h2>
                 <span class="text-muted my-auto ml-auto">
                 {{ moment(post.timestamp).format('LL') }}</span>
@@ -17,9 +17,9 @@
             </article>
             <div class="d-flex">
                 <a id="readMore" class="btn btn-outline-primary btn-sm mr-auto"
-                   href="{{ url_for('.show_post', slug=post.slug) }}"
+                   href="{{ url_for('.show_post', post_id=post.id) }}"
                    role="button">Read more</a>
-                <a href="{{ url_for('.show_post', slug=post.slug) + '#postComment' }} "
+                <a href="{{ url_for('.show_post', post_id=post.id) + '#postComment' }} "
                    class="badge badge-success my-auto ml-1">
                     Comments: {{ post.comments|length }}</a>
                 <a href="{{ url_for('.show_category', category_name=post.category.name) }}"

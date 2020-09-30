@@ -36,7 +36,7 @@
                                 <fieldset>
                                     <label class="control-label" for="readOnlyInput">Share Link</label>
                                     <input class="form-control" id="shareLink" type="text" readonly=""
-                                           value="{{ url_for('.show_post', slug=post.slug, _external=True) }}">
+                                           value="{{ url_for('.show_post', post_id=post.id, _external=True) }}">
                                 </fieldset>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
         <div id="postComment">
             <h3 class="d-flex">{{ comments|length }} Comments
                 <small>
-                    <a href="{{ url_for('.show_post', slug=post.slug, page=pagination.pages or 1) }}#postComment"
+                    <a href="{{ url_for('.show_post', post_id=post.id, page=pagination.pages or 1) }}#postComment"
                        class="badge badge-light my-auto">Latest</a>
                 </small>
                 {% if current_user.is_authenticated %}
@@ -140,7 +140,7 @@
         {% if request.args.get('reply') %}
             <div class="alert alert-secondary">
                 Reply to <strong>{{ request.args.get('author') }}</strong> :
-                <a class="float-right" href="{{ url_for('.show_post', slug=post.slug) }}">Cancel</a>
+                <a class="float-right" href="{{ url_for('.show_post', post_id=post.id) }}">Cancel</a>
             </div>
         {% endif %}
         {% if post.can_comment %}
