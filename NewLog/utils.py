@@ -45,7 +45,7 @@ def on_changed_body(target, value, oldvalue, initiator):
     allowed_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'p', 'br', 'strong', 'em', 'b',
                     'del', 'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'img',
                     'a', 'abbr', 'span', 'div', 'table', 'thead', 'tbody', 'tr', 'th', 'td']
-    allowed_attributes = ['src', 'title', 'alt', 'href', 'class']
+    allowed_attributes = ['src', 'title', 'alt', 'href', 'class', 'sup', 'sub']
     html = markdown(value, output_format='html', extensions=['tables', 'fenced_code', 'codehilite', 'nl2br'])
     clean_html = clean(html, tags=allowed_tags, attributes=allowed_attributes)
     target.body_html = clean_html
