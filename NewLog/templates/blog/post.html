@@ -52,13 +52,13 @@
                 </div>
             </div>
         </div>
-        <div class="article">
+        <article class="article">
             {% if post.body_html %}
                 {{ post.body_html|safe }}
             {% else %}
                 {{ post.body|safe }}
             {% endif %}
-        </div>
+        </article>
         <div id="postComment">
             <h3 class="d-flex">{{ comments|length }} Comments
                 <small>

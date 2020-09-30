@@ -196,6 +196,24 @@ img {
     margin: 0.5rem 0 1rem;
 }
 
+.article table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+}
+
+.article tbody th,
+.article tbody td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 2px solid #333;
+}
+
+.article thead th {
+    vertical-align: bottom;
+    border-bottom: 3px solid #333;
+}
+
 /*
     blockquote style
 */
