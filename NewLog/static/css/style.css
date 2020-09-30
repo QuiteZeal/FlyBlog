@@ -22,6 +22,15 @@ img {
     text-decoration: underline;
 }
 
+::-moz-selection {
+    color: #f8f9fa;
+    background-color: #d65076;
+}
+
+::selection {
+    color: #f8f9fa;
+    background-color: #d65076;
+}
 /*
     add tag link offset
 */
