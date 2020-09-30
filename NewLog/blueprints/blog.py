@@ -110,9 +110,9 @@ def reply_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     if not comment.post.can_comment:
         flash('Only Read, No Discuss.', 'warning')
-        return redirect(url_for('.show_post', post_id=comment.post.id))
+        return redirect(url_for('.show_post', slug=comment.post.slug))
     return redirect(
-        url_for('.show_post', post_id=comment.post_id, reply=comment_id, author=comment.author) + '#commentForm')
+        url_for('.show_post', slug=comment.post.slug, reply=comment_id, author=comment.author) + '#commentForm')
 
 
 @blog_bp.route('/change-theme/<theme_name>')
