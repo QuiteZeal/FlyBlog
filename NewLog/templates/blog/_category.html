@@ -3,7 +3,7 @@
         <div class="container-md my-4">
             <span class="text-muted my-auto">{{ moment(post.timestamp).format('ll') }}</span>
             <h3 class="fs-1 text-primary my-auto">
-                <a href="{{ url_for('.show_post', post_id=post.id) }}">{{ post.title }}</a>
+                <a href="{{ url_for('.show_post', post_slug=post.slug) }}">{{ post.title }}</a>
             </h3>
         </div>
     {% endfor %}

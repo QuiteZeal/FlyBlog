@@ -54,14 +54,17 @@ def new_post():
     form = PostForm()
     if form.validate_on_submit():
         title = form.title.data
-        slug = slugify(title)
+        if form.slug.data:
+            slug = form.slug.data
+        else:
+            slug = slugify(form.title.data)
         body = form.body.data
         category = Category.query.get(form.category.data)
         post = Post(title=title, body=body, slug=slug, category=category)
         db.session.add(post)
         db.session.commit()
         flash('Post published.', 'success')
-        return redirect(url_for('blog.show_post', post_id=post.id))
+        return redirect(url_for('blog.show_post', post_slug=post.slug))
     return render_template('admin/new_post.html', form=form)
 
 
@@ -71,13 +74,16 @@ def edit_post(post_id):
     post = Post.query.get_or_404(post_id)
     if form.validate_on_submit():
         post.title = form.title.data
-        post.slug = slugify(form.title.data)
+        if form.slug.data:
+            post.slug = form.slug.data
+        else:
+            post.slug = slugify(form.title.data)
         post.body = form.body.data
         post.category = Category.query.get(form.category.data)
         post.last_timestamp = datetime.utcnow()
         db.session.commit()
         flash('Post updated.', 'success')
-        return redirect(url_for('blog.show_post', post_id=post.id))
+        return redirect(url_for('blog.show_post', post_slug=post.slug))
     form.title.data = post.title
     form.body.data = post.body
     form.category.data = post.category_name

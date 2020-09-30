@@ -33,6 +33,7 @@ class SettingForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(1, 100)])
     category = SelectField('Category', coerce=int, default=1)
+    slug = StringField('Slug', validators=[Optional(), Length(0, 60)])
     body = PageDownField('Body', validators=[DataRequired()])
     submit = SubmitField()
 
