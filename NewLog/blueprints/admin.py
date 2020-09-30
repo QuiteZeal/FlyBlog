@@ -85,6 +85,7 @@ def edit_post(post_id):
         flash('Post updated.', 'success')
         return redirect(url_for('blog.show_post', slug=post.slug))
     form.title.data = post.title
+    form.slug.data = post.slug
     form.body.data = post.body
     form.category.data = post.category_name
     return render_template('admin/edit_post.html', form=form)
