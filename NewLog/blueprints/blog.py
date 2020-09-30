@@ -111,7 +111,7 @@ def reply_comment(comment_id):
         flash('Only Read, No Discuss.', 'warning')
         return redirect(url_for('.show_post', post_slug=comment.post.slug))
     return redirect(
-        url_for('.show_post', post_slug=comment.post_slug, reply=comment_id, author=comment.author) + '#commentForm')
+        url_for('.show_post', post_slug=comment.post.slug, reply=comment_id, author=comment.author) + '#commentForm')
 
 
 @blog_bp.route('/change-theme/<theme_name>')
