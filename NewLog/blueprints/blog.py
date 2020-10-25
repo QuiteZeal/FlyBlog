@@ -52,7 +52,11 @@ def show_category(category_name):
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['BLOG_POST_PER_PAGE']
     # Add query filter
-    pagination = Post.query.with_parent(category).order_by(Post.timestamp.desc()).paginate(page, per_page)
+    if current_user.is_authenticated:
+        pagination = Post.query.with_parent(category).order_by(Post.timestamp.desc()).paginate(page, per_page=per_page)
+    else:
+        pagination = Post.query.with_parent(category).filter_by(private=False).order_by(Post.timestamp.desc()).paginate(
+            page, per_page=per_page)
     posts = pagination.items
     return render_template('blog/category.html', category=category, pagination=pagination, posts=posts)
 
