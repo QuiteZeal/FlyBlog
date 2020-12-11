@@ -43,7 +43,7 @@ def redirect_back(default='blog.index', **kwargs):
 
 
 def on_changed_body(target, value, oldvalue, initiator):
-    allowed_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'p', 'br', 'strong', 'em', 'b',
+    allowed_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'p', 'br', 'strong', 'em', 'b', 'hr',
                     'del', 'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'img', 'sup', 'sub',
                     'a', 'abbr', 'span', 'div', 'table', 'thead', 'tbody', 'tr', 'th', 'td']
     allowed_attributes = ['src', 'title', 'alt', 'href', 'class']
