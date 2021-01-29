@@ -43,7 +43,11 @@ def about():
 
 @blog_bp.route('/overview')
 def overview():
-    return render_template('blog/overview.html')
+    if current_user.is_authenticated:
+        posts = Post.query.order_by(Post.timestamp.desc())
+    else:
+        posts = Post.query.filter_by(private=False).order_by(Post.timestamp.desc())
+    return render_template('blog/overview.html', posts=posts)
 
 
 @blog_bp.route('/category/<category_name>')
