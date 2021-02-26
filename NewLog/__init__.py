@@ -23,6 +23,7 @@ from NewLog.config import config
 from NewLog.extensions import bootstrap, db, pagedown, mail, moment, login_manager, csrf, migrate, toolbar
 # context for base.html
 from NewLog.models import Admin, Post, Comment, Category, Link
+from NewLog.htmltruncate import truncate
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 
@@ -35,6 +36,8 @@ def create_app(config_name=None):
 
     app = Flask('NewLog')
     app.config.from_object(config[config_name])
+
+    app.add_template_filter(truncate)
 
     register_logging(app)
     register_extensions(app)
