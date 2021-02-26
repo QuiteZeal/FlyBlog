@@ -1,6 +1,6 @@
 {% if posts %}
     {% for post in posts %}
-        <div class="container-md my-4">
+        <div class="d-flex flex-column container-md my-4">
             <div class="d-flex mb-3 border-bottom">
                 <h2 class="fs-2 text-primary my-auto">
                     <a href="{{ url_for('.show_post', slug=post.slug) }}">{{ post.title }}</a>
