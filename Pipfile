@@ -26,6 +26,7 @@ pygments = "*"
 flask-migrate = "*"
 gunicorn = "*"
 flask-debugtoolbar = "*"
+flask-whooshee = "*"
 
 [requires]
 python_version = "3.8"
