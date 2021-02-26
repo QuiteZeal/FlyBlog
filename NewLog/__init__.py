@@ -23,8 +23,6 @@ from NewLog.config import config
 from NewLog.extensions import bootstrap, db, pagedown, mail, moment, login_manager, csrf, migrate, toolbar
 # context for base.html
 from NewLog.models import Admin, Post, Comment, Category, Link
-from NewLog.htmltruncate import truncate
-
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 
