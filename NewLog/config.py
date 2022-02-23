@@ -43,7 +43,7 @@ class BaseConfig(object):
     BLOG_COMMENT_PER_PAGE = 12
     BLOG_MANAGE_COMMENT_PER_PAGE = 20
     # ('theme name', 'display name')
-    BLOG_THEMES = {'sketchy': 'sketchy', 'minty': 'minty', 'flatly': 'flatly', 'superhero': 'superhero'}
+    BLOG_THEMES = {'sketchy': 'sketchy', 'minty': 'minty', 'flatly': 'flatly', 'slate': 'slate'}
     # Slow query 1s
     BLOG_SLOW_QUERY_THRESHOLD = 1
 
