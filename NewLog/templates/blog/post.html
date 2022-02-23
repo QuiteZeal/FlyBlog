@@ -14,7 +14,8 @@
             <a href="#postComment" class="badge badge-success my-auto mr-1">
                 Comments: {{ post.comments|length }}</a>
             <a href="javascript:" class="badge badge-dark my-auto mr-auto">
-                {{ moment(post.last_timestamp).format('lll') }}</a>
+                {#  use timestamp or last_timestamp              #}
+                {{ moment(post.timestamp).format('lll') }}</a>
             {% if current_user.is_authenticated %}
                 <a href="{{ url_for('admin.edit_post', post_id=post.id) }}" class="badge badge-info">Edit</a>
             {% else %}
